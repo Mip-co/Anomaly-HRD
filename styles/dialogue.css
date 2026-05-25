@@ -1,0 +1,66 @@
+/* ============================================
+   DIALOGUE.CSS — Typewriter & Dialogue styling
+   Anomaly HRD
+   ============================================ */
+
+/* Typewriter cursor */
+.typewriter-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 13px;
+  background: var(--col-monitor-text);
+  margin-left: 2px;
+  vertical-align: middle;
+  animation: blink 0.7s step-end infinite;
+}
+
+/* Dialogue text animating in */
+.dialogue-text.typing {
+  /* Nothing special, managed by JS char-by-char */
+}
+
+/* Email typewriter */
+.email-body p {
+  margin-bottom: 8px;
+}
+
+/* Anomaly hint — subtle discomfort */
+.anomaly-hint {
+  color: var(--col-red);
+  font-style: italic;
+  font-size: 11px;
+  margin-top: 8px;
+  opacity: 0;
+  animation: fade-in-hint 0.5s ease forwards;
+}
+
+@keyframes fade-in-hint {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 0.7; }
+}
+
+/* Stressed / anomaly dialogue */
+.dialogue-text.anomaly-voice {
+  color: #cc8844;
+  letter-spacing: 0.5px;
+}
+
+.dialogue-text.anomaly-glitch {
+  animation: text-glitch 0.5s steps(2) infinite;
+}
+
+@keyframes text-glitch {
+  0%, 100% { transform: none; filter: none; }
+  33%       { transform: translateX(1px); filter: hue-rotate(30deg); }
+  66%       { transform: translateX(-1px); filter: hue-rotate(-30deg); }
+}
+
+/* Normal applicant dialogue */
+.dialogue-text.normal-voice {
+  color: var(--col-monitor-text);
+}
+
+/* System/boss messages */
+.dialogue-text.boss-voice {
+  color: var(--col-amber);
+}

@@ -1,0 +1,706 @@
+/* ============================================
+   OFFICE.CSS — Office Room & Desk Environment
+   Anomaly HRD
+   ============================================ */
+
+/* ── Game Screen Layout ── */
+#screen-game {
+  flex-direction: column;
+  background: #0f0b06;
+  overflow: hidden;
+}
+
+/* ── Office Room (upper 62%) ── */
+#office-room {
+  position: relative;
+  width: 100%;
+  height: calc(100% - var(--desk-height) - var(--hud-height));
+  background: linear-gradient(
+    180deg,
+    #1a1408 0%,
+    #120f06 60%,
+    #0d0b04 100%
+  );
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+/* ── Ceiling Light ── */
+#ceiling-light {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 4px;
+  background: #c8b878;
+  box-shadow:
+    0 0 30px 15px rgba(200, 184, 120, 0.12),
+    0 0 80px 40px rgba(200, 184, 120, 0.06),
+    0 0 200px 100px rgba(200, 184, 120, 0.03);
+  z-index: 5;
+}
+
+#ceiling-light.flicker {
+  animation: light-flicker 8s ease-in-out infinite;
+}
+
+@keyframes light-flicker {
+  0%, 89%, 91%, 93%, 95%, 100% { opacity: 1; }
+  90%, 92%, 94%                 { opacity: 0.1; }
+}
+
+/* ── Window (left panel) ── */
+#office-window {
+  position: relative;
+  width: 28%;
+  min-width: 180px;
+  height: 100%;
+  overflow: hidden;
+  border-right: 3px solid #1f1a0e;
+}
+
+.rain-container {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+#rain-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.window-city {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, #070810 0%, #0a0c14 40%, #080b10 100%);
+  z-index: 1;
+}
+
+/* Subtle city lights */
+.window-city::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 2px at 15% 55%, rgba(255,200,100,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 65%, rgba(200,220,255,0.3) 0%, transparent 100%),
+    radial-gradient(2px 3px at 40% 50%, rgba(255,180,80,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 70%, rgba(180,200,255,0.2) 0%, transparent 100%),
+    radial-gradient(1px 2px at 70% 60%, rgba(255,200,100,0.25) 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 75%, rgba(200,220,255,0.2) 0%, transparent 100%),
+    radial-gradient(3px 4px at 30% 80%, rgba(255,150,50,0.15) 0%, transparent 100%),
+    radial-gradient(1px 2px at 60% 85%, rgba(200,220,255,0.15) 0%, transparent 100%);
+  z-index: 1;
+  animation: city-flicker 5s step-end infinite;
+}
+
+@keyframes city-flicker {
+  0%, 100% { opacity: 1; }
+  47%       { opacity: 0.85; }
+  48%       { opacity: 1; }
+  73%       { opacity: 0.9; }
+  74%       { opacity: 1; }
+}
+
+.window-city::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,0.6) 0%,
+    rgba(0,0,0,0.2) 40%,
+    rgba(0,0,0,0.5) 100%
+  );
+  z-index: 2;
+}
+
+/* ── Tension darkness overlay (fills with tension level via JS class) ── */
+#screen-game::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  pointer-events: none;
+  z-index: 500;
+  transition: background 3s ease;
+}
+
+#screen-game.tension-3::after { background: rgba(0, 0, 0, 0.06); }
+#screen-game.tension-4::after { background: rgba(0, 0, 0, 0.14); }
+#screen-game.tension-5::after { background: rgba(0, 0, 0, 0.24); }
+
+/* ── Window — improved frame ── */
+#office-window::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 2px solid #2a2218;
+  z-index: 10;
+  pointer-events: none;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+}
+
+/* Cross divider */
+#office-window::after {
+  content: '';
+  position: absolute;
+  top: 8px; bottom: 8px; left: 50%;
+  width: 2px;
+  background: #2a2218;
+  z-index: 11;
+  pointer-events: none;
+}
+
+/* Lightning flash */
+.lightning-flash {
+  position: absolute;
+  inset: 0;
+  background: rgba(200, 220, 255, 0);
+  z-index: 9;
+  pointer-events: none;
+  transition: background 0.05s;
+}
+
+.lightning-flash.active {
+  background: rgba(200, 220, 255, 0.4);
+}
+
+/* ── Interview Area (center) ── */
+#interview-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: linear-gradient(180deg, #0e0b05 0%, #141008 100%);
+}
+
+#waiting-room {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 0;
+  position: relative;
+  background: linear-gradient(180deg, #0a0805 0%, #181208 100%);
+}
+
+/* Subtle back wall texture */
+#waiting-room::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 40px,
+    rgba(255,255,255,0.01) 40px,
+    rgba(255,255,255,0.01) 41px
+  );
+}
+
+/* Chair */
+.chair-visual {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 50px;
+  background: linear-gradient(180deg, #2a2018 0%, #1a1208 100%);
+  border-top: 3px solid #3a2e1a;
+  border-radius: 2px 2px 0 0;
+}
+
+.chair-visual::before {
+  content: '';
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 22px;
+  background: linear-gradient(180deg, #2e2418 0%, #241c10 100%);
+  border-radius: 4px 4px 0 0;
+  border: 1px solid #3a2e1a;
+}
+
+/* Applicant Figure */
+.applicant-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 50px;
+  animation: applicant-enter 0.8s ease forwards;
+}
+
+@keyframes applicant-enter {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.applicant-head {
+  width: 48px;
+  height: 56px;
+  background: #c8a878;
+  border-radius: 50% 50% 45% 45%;
+  position: relative;
+  border: 2px solid #a08858;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.applicant-torso {
+  width: 64px;
+  height: 70px;
+  background: #2a2828;
+  border-radius: 4px 4px 0 0;
+  margin-top: -4px;
+  border: 1px solid #3a3838;
+}
+
+.applicant-name-tag {
+  position: absolute;
+  bottom: 52px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--col-white-dim);
+  background: rgba(0,0,0,0.7);
+  padding: 2px 6px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+/* Glass divider between interview room and desk */
+.glass-divider {
+  height: 20px;
+  background: linear-gradient(180deg, #1a1408 0%, #0d0b04 100%);
+  position: relative;
+  border-bottom: 3px solid #2a2010;
+}
+
+.glass-glare {
+  position: absolute;
+  top: 4px;
+  left: 10%;
+  width: 30%;
+  height: 2px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 1px;
+}
+
+/* ── Bookshelf (right) ── */
+#office-shelf {
+  width: 22%;
+  min-width: 140px;
+  height: 100%;
+  background: linear-gradient(180deg, #100d06 0%, #0d0a04 100%);
+  border-left: 3px solid #1f1a0e;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 8px;
+  gap: 12px;
+  position: relative;
+}
+
+.shelf-books {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 4px;
+}
+
+/* Simulated books */
+.shelf-books::before {
+  content: '';
+  display: block;
+  height: 100%;
+  background:
+    linear-gradient(90deg,
+      #3a1a0a 0px, #3a1a0a 12px,
+      #1a3a0a 12px, #1a3a0a 22px,
+      #0a1a3a 22px, #0a1a3a 36px,
+      #2a1a00 36px, #2a1a00 46px,
+      #1a0a2a 46px, #1a0a2a 58px,
+      #3a2a0a 58px, #3a2a0a 68px,
+      #0a2a1a 68px, #0a2a1a 80px,
+      transparent 80px
+    );
+  border-radius: 2px;
+  opacity: 0.7;
+}
+
+.shelf-clock {
+  background: #0a0a08;
+  border: 1px solid #2a2018;
+  border-radius: 2px;
+  padding: 8px;
+  text-align: center;
+}
+
+#clock-display {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--col-red-bright);
+  text-shadow: 0 0 10px rgba(204,34,34,0.5);
+  letter-spacing: 3px;
+}
+
+/* ── Desk Surface (lower area) ── */
+#desk-surface {
+  width: 100%;
+  height: var(--desk-height);
+  background: linear-gradient(180deg, #1e1508 0%, #160f05 100%);
+  border-top: 4px solid #2a1e08;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  padding: 12px 16px;
+  gap: 12px;
+  overflow: hidden;
+  z-index: 10;
+}
+
+/* Desk wood grain texture */
+#desk-surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    175deg,
+    transparent,
+    transparent 8px,
+    rgba(255,255,255,0.008) 8px,
+    rgba(255,255,255,0.008) 9px
+  );
+  pointer-events: none;
+}
+
+/* ── CV Panel ── */
+#cv-panel {
+  width: 200px;
+  min-width: 180px;
+  background: var(--col-paper);
+  color: var(--col-ink);
+  padding: 10px;
+  font-family: var(--font-paper);
+  font-size: 11px;
+  position: relative;
+  box-shadow: 3px 3px 12px rgba(0,0,0,0.6);
+  transform: rotate(-1deg);
+  height: calc(100% - 8px);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.cv-header {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--col-paper-dark);
+}
+
+.cv-photo {
+  width: 44px;
+  height: 52px;
+  background: var(--col-paper-dark);
+  border: 1px solid #888;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  overflow: hidden;
+}
+
+.cv-identity {
+  flex: 1;
+}
+
+.cv-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 4px;
+}
+
+.cv-field span {
+  font-size: 9px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cv-field strong {
+  font-size: 11px;
+  color: var(--col-ink);
+}
+
+.cv-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cv-section h4 {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #555;
+  border-bottom: 1px solid var(--col-paper-dark);
+  margin-bottom: 3px;
+}
+
+.cv-section p {
+  font-size: 10px;
+  line-height: 1.4;
+  color: #333;
+}
+
+.cv-stamp {
+  position: absolute;
+  bottom: 10px;
+  right: 8px;
+  font-family: var(--font-display);
+  font-size: 28px;
+  padding: 4px 8px;
+  border: 3px solid;
+  border-radius: 2px;
+  transform: rotate(-12deg);
+  opacity: 0.85;
+}
+
+.cv-stamp.hired {
+  color: var(--col-green);
+  border-color: var(--col-green);
+}
+
+.cv-stamp.rejected {
+  color: var(--col-red);
+  border-color: var(--col-red);
+}
+
+/* ── Laptop Panel ── */
+#laptop-panel {
+  flex: 1;
+  background: #111;
+  border: 2px solid #222;
+  border-radius: 3px;
+  height: calc(100% - 8px);
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.8), 0 0 8px rgba(51,204,51,0.05);
+}
+
+.laptop-screen {
+  background: var(--col-monitor-bg);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.laptop-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--col-monitor-dim);
+  border-bottom: 1px solid #112211;
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+}
+
+.laptop-content {
+  flex: 1;
+  font-size: 12px;
+  color: var(--col-monitor-text);
+  overflow-y: auto;
+  line-height: 1.6;
+}
+
+.system-idle {
+  color: var(--col-monitor-dim);
+  font-style: italic;
+}
+
+/* ── Coffee Mug ── */
+#coffee-mug {
+  width: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  height: calc(100% - 8px);
+  padding-bottom: 8px;
+}
+
+.mug-body {
+  width: 34px;
+  height: 40px;
+  background: linear-gradient(180deg, #2a2020 0%, #1a1010 100%);
+  border-radius: 0 0 4px 4px;
+  border: 1px solid #333;
+  position: relative;
+}
+
+.mug-body::before {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: 8px;
+  width: 8px;
+  height: 16px;
+  border: 2px solid #333;
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+}
+
+.mug-steam {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 12px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 1px;
+  animation: steam 2s ease-in-out infinite;
+}
+
+.mug-steam::before, .mug-steam::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 1px;
+  animation: steam 2s ease-in-out 0.7s infinite;
+}
+
+.mug-steam::before { left: -6px; }
+.mug-steam::after  { left: 6px; animation-delay: 1.2s; }
+
+@keyframes steam {
+  0%   { opacity: 0; transform: translateY(0) scaleX(1); }
+  50%  { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(-14px) scaleX(1.5); }
+}
+
+/* ── HUD ── */
+#hud {
+  width: 100%;
+  height: var(--hud-height);
+  background: #0a0805;
+  border-top: 2px solid #1a1208;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 40px;
+  z-index: 20;
+}
+
+.hud-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--col-gray);
+  display: block;
+  margin-bottom: 2px;
+}
+
+#hud-hearts {
+  display: flex;
+  flex-direction: column;
+}
+
+#heart-display {
+  display: flex;
+  gap: 6px;
+}
+
+.heart {
+  font-size: 16px;
+  transition: filter var(--trans-normal);
+}
+
+.heart.lost {
+  filter: grayscale(1) opacity(0.3);
+}
+
+#hud-status, #hud-shift {
+  display: flex;
+  flex-direction: column;
+}
+
+#hud-target, #hud-shift-time {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--col-amber);
+}
+
+/* ── Phase 2: Tension-aware extras ── */
+
+/* Anomaly applicant — subtle visual distortion class */
+.applicant-body.anomaly-aura .applicant-head {
+  animation: anomaly-aura 2s ease-in-out infinite;
+}
+
+@keyframes anomaly-aura {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; filter: none; }
+  50%       { box-shadow: 0 0 12px 2px rgba(180, 0, 0, 0.2); filter: brightness(0.95) hue-rotate(5deg); }
+}
+
+/* no-blink anomaly figure */
+.no-blink .applicant-head::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  animation: no-blink-stare 0.08s steps(1) infinite;
+}
+
+@keyframes no-blink-stare {
+  0%, 95% { background: transparent; }
+  96%, 100% { background: rgba(255, 0, 0, 0.04); }
+}
+
+/* Window — brief figure silhouette during tension events */
+.window-figure {
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 60px;
+  background: rgba(0,0,0,0.85);
+  border-radius: 50% 50% 0 0;
+  z-index: 13;
+  opacity: 0;
+  animation: figure-appear 1.5s ease forwards;
+  filter: blur(2px);
+}
+
+.window-figure::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 22px;
+  background: rgba(0,0,0,0.85);
+  border-radius: 50%;
+  filter: blur(1px);
+}
+
+@keyframes figure-appear {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  30%  { opacity: 0.7; transform: translateX(-50%) translateY(0); }
+  70%  { opacity: 0.5; }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-5px); }
+}

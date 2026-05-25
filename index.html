@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anomaly HRD</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/office.css" />
+  <link rel="stylesheet" href="styles/ui.css" />
+  <link rel="stylesheet" href="styles/effects.css" />
+  <link rel="stylesheet" href="styles/dialogue.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN: TITLE
+  ══════════════════════════════════════════ -->
+  <div id="screen-title" class="screen active">
+    <div class="title-noise"></div>
+    <div class="title-content">
+      <div class="title-logo">
+        <p class="title-sub">PT. DIMBUD MENCARI CINTA SEJATI TBK</p>
+        <h1 class="title-main">ANOMALY<br/><span>HRD</span></h1>
+        <p class="title-tagline">— Night Shift Division —</p>
+      </div>
+      <div class="title-info">
+        <p class="blink-slow">[ PRESS ANY KEY TO BEGIN ]</p>
+        <p class="title-warning">⚠ Contains flashing lights and disturbing content</p>
+      </div>
+    </div>
+    <div class="crt-overlay"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN: INTRO / BOSS MESSAGE
+  ══════════════════════════════════════════ -->
+  <div id="screen-intro" class="screen">
+    <div class="intro-monitor">
+      <div class="monitor-screen">
+        <div class="monitor-header">
+          <span>INBOX (1)</span>
+          <span id="intro-time">22:47</span>
+        </div>
+        <div class="monitor-email">
+          <div class="email-from">FROM: pak.direktur@nusantarajaya.co.id</div>
+          <div class="email-subject">SUBJECT: Selamat Datang - Instruksi Shift Malam</div>
+          <div class="email-body" id="email-body">
+            <!-- Filled by dialogue.js -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <button id="btn-start-shift" class="btn-primary hidden">[ MULAI SHIFT ]</button>
+    <div class="crt-overlay"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN: GAME (Main Office)
+  ══════════════════════════════════════════ -->
+  <div id="screen-game" class="screen">
+
+    <!-- Background: Office Room -->
+    <div id="office-room">
+
+      <!-- Window (left) -->
+      <div id="office-window">
+        <div class="rain-container">
+          <canvas id="rain-canvas"></canvas>
+        </div>
+        <div class="window-city"></div>
+        <div class="lightning-flash" id="lightning-flash"></div>
+      </div>
+
+      <!-- Interview Glass (center-top) -->
+      <div id="interview-area">
+        <div id="waiting-room">
+          <div id="applicant-figure" class="hidden">
+            <!-- Applicant visual rendered here -->
+            <div class="applicant-body">
+              <div class="applicant-head" id="applicant-head"></div>
+              <div class="applicant-torso"></div>
+            </div>
+            <div class="applicant-name-tag" id="applicant-name-tag"></div>
+          </div>
+          <div class="chair-visual"></div>
+        </div>
+        <div class="glass-divider">
+          <div class="glass-glare"></div>
+        </div>
+      </div>
+
+      <!-- Bookshelf (right) -->
+      <div id="office-shelf">
+        <div class="shelf-books"></div>
+        <div class="shelf-clock" id="wall-clock">
+          <span id="clock-display">22:00</span>
+        </div>
+      </div>
+
+      <!-- Fluorescent Light -->
+      <div id="ceiling-light" class="flicker"></div>
+
+    </div>
+
+    <!-- Desk Surface -->
+    <div id="desk-surface">
+
+      <!-- CV Document -->
+      <div id="cv-panel" class="desk-item hidden">
+        <div class="cv-header">
+          <div class="cv-photo" id="cv-photo"></div>
+          <div class="cv-identity">
+            <div class="cv-field"><span>Nama</span><strong id="cv-name">—</strong></div>
+            <div class="cv-field"><span>Usia</span><strong id="cv-age">—</strong></div>
+            <div class="cv-field"><span>Posisi</span><strong id="cv-position">—</strong></div>
+            <div class="cv-field"><span>Asal</span><strong id="cv-origin">—</strong></div>
+          </div>
+        </div>
+        <div class="cv-body">
+          <div class="cv-section">
+            <h4>Pengalaman</h4>
+            <p id="cv-experience">—</p>
+          </div>
+          <div class="cv-section">
+            <h4>Pendidikan</h4>
+            <p id="cv-education">—</p>
+          </div>
+          <div class="cv-section">
+            <h4>Catatan</h4>
+            <p id="cv-notes">—</p>
+          </div>
+        </div>
+        <div class="cv-stamp hidden" id="cv-stamp"></div>
+      </div>
+
+      <!-- Laptop / Monitor -->
+      <div id="laptop-panel" class="desk-item">
+        <div class="laptop-screen">
+          <div class="laptop-header">
+            <span>HRD SYSTEM v2.1</span>
+            <span id="applicant-counter">Pelamar: 0 / 20</span>
+          </div>
+          <div class="laptop-content" id="laptop-content">
+            <p class="system-idle">Sistem menunggu pelamar berikutnya...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coffee Mug -->
+      <div id="coffee-mug" class="desk-item">
+        <div class="mug-body">
+          <div class="mug-steam"></div>
+        </div>
+      </div>
+
+      <!-- Action Panel: Questions + Hire/Reject -->
+      <div id="action-panel" class="hidden">
+
+        <!-- Dialogue Box -->
+        <div id="dialogue-box">
+          <div class="dialogue-speaker" id="dialogue-speaker">Pelamar</div>
+          <div class="dialogue-text" id="dialogue-text">...</div>
+          <div class="dialogue-next blink-slow" id="dialogue-next">▼</div>
+        </div>
+
+        <!-- Question Buttons -->
+        <div id="question-panel" class="hidden">
+          <p class="panel-label">Tanya Pelamar:</p>
+          <div id="question-buttons">
+            <!-- Generated by game.js -->
+          </div>
+        </div>
+
+        <!-- Decision Buttons -->
+        <div id="decision-panel" class="hidden">
+          <p class="panel-label">Keputusan:</p>
+          <div class="decision-buttons">
+            <button id="btn-hire" class="btn-hire">✔ TERIMA</button>
+            <button id="btn-reject" class="btn-reject">✘ TOLAK</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- HUD: Hearts + Status -->
+    <div id="hud">
+      <div id="hud-hearts">
+        <span class="hud-label">NYAWA</span>
+        <div id="heart-display">
+          <!-- Hearts generated by game.js -->
+        </div>
+      </div>
+      <div id="hud-status">
+        <span class="hud-label">TARGET</span>
+        <span id="hud-target">0 / 20</span>
+      </div>
+      <div id="hud-shift">
+        <span class="hud-label">SHIFT</span>
+        <span id="hud-shift-time">22:00</span>
+      </div>
+    </div>
+
+    <!-- Post-decision overlay note -->
+    <div id="result-overlay" class="hidden">
+      <div id="result-message"></div>
+    </div>
+
+    <!-- CRT & Effects overlays -->
+    <div class="crt-overlay"></div>
+    <div class="vhs-noise" id="vhs-noise"></div>
+    <div class="screen-flicker" id="screen-flicker"></div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN: ENDING
+  ══════════════════════════════════════════ -->
+  <div id="screen-ending" class="screen">
+    <div class="ending-content" id="ending-content">
+      <!-- Filled by endings.js -->
+    </div>
+    <div class="crt-overlay"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       GLOBAL: Horror Event Overlay
+  ══════════════════════════════════════════ -->
+  <div id="horror-overlay" class="hidden">
+    <div id="horror-image"></div>
+    <div id="horror-text"></div>
+  </div>
+
+  <!-- Scripts (order matters) -->
+  <script src="data/applicants-data.js"></script>
+  <script src="data/anomalies-data.js"></script>
+  <script src="data/dialogue-data.js"></script>
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/audio.js"></script>
+  <script src="scripts/effects.js"></script>
+  <script src="scripts/dialogue.js"></script>
+  <script src="scripts/applicants.js"></script>
+  <script src="scripts/anomalies.js"></script>
+  <script src="scripts/endings.js"></script>
+  <script src="scripts/game.js"></script>
+
+</body>
+</html>

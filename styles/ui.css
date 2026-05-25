@@ -1,0 +1,275 @@
+/* ============================================
+   UI.CSS — Action Panel, Dialogue, Buttons
+   Anomaly HRD
+   ============================================ */
+
+/* ── Action Panel ── */
+#action-panel {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: min(420px, 50%);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px 12px;
+  gap: 10px;
+  background: linear-gradient(270deg, rgba(10,8,4,0.95) 0%, transparent 100%);
+  z-index: 20;
+}
+
+/* ── Dialogue Box ── */
+#dialogue-box {
+  background: rgba(5, 14, 5, 0.92);
+  border: 1px solid var(--col-green-dim);
+  border-radius: 2px;
+  padding: 12px 14px;
+  position: relative;
+  box-shadow: 0 0 20px rgba(0,0,0,0.8), inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+.dialogue-speaker {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--col-green);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--col-green-dim);
+  padding-bottom: 4px;
+}
+
+.dialogue-text {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--col-monitor-text);
+  line-height: 1.6;
+  min-height: 40px;
+}
+
+.dialogue-next {
+  position: absolute;
+  bottom: 6px;
+  right: 10px;
+  font-size: 12px;
+  color: var(--col-green-dim);
+}
+
+/* ── Panel Label ── */
+.panel-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--col-gray);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+/* ── Question Panel ── */
+#question-panel {
+  background: rgba(5, 5, 5, 0.85);
+  border: 1px solid #222;
+  padding: 10px;
+  border-radius: 2px;
+}
+
+#question-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.btn-question {
+  background: rgba(20, 30, 20, 0.8);
+  color: var(--col-monitor-text);
+  border: 1px solid var(--col-green-dim);
+  padding: 8px 12px;
+  text-align: left;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  border-radius: 2px;
+  transition: all var(--trans-fast);
+  cursor: pointer;
+}
+
+.btn-question:hover {
+  background: rgba(40, 70, 40, 0.8);
+  border-color: var(--col-green);
+  color: #fff;
+  box-shadow: 0 0 8px rgba(74, 124, 78, 0.3);
+}
+
+.btn-question:disabled {
+  opacity: 0.4;
+  cursor: default;
+  background: rgba(10, 10, 10, 0.5);
+}
+
+/* ── Decision Panel ── */
+#decision-panel {
+  background: rgba(5, 5, 5, 0.85);
+  border: 1px solid #222;
+  padding: 10px;
+  border-radius: 2px;
+}
+
+.decision-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-hire, .btn-reject {
+  flex: 1;
+  padding: 12px 8px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 2px;
+  border-radius: 2px;
+  transition: all var(--trans-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-hire {
+  background: rgba(10, 30, 10, 0.9);
+  color: var(--col-green);
+  border: 2px solid var(--col-green-dim);
+}
+
+.btn-hire:hover {
+  background: rgba(30, 70, 30, 0.9);
+  border-color: var(--col-green);
+  box-shadow: 0 0 20px rgba(74, 124, 78, 0.4), inset 0 0 10px rgba(74, 124, 78, 0.1);
+  color: #fff;
+}
+
+.btn-reject {
+  background: rgba(30, 8, 8, 0.9);
+  color: var(--col-red);
+  border: 2px solid #4a0a0a;
+}
+
+.btn-reject:hover {
+  background: rgba(80, 15, 15, 0.9);
+  border-color: var(--col-red);
+  box-shadow: 0 0 20px rgba(139, 26, 26, 0.4), inset 0 0 10px rgba(139, 26, 26, 0.1);
+  color: #ff4444;
+}
+
+/* Button press effect */
+.btn-hire:active, .btn-reject:active {
+  transform: scale(0.97);
+}
+
+/* ── Applicant Counter ── */
+#applicant-counter {
+  font-size: 10px;
+  color: var(--col-monitor-dim);
+}
+
+/* ── Primary Button (reusable) ── */
+.btn-primary {
+  font-family: var(--font-display);
+  font-size: 24px;
+  letter-spacing: 3px;
+  color: var(--col-amber);
+  background: transparent;
+  border: 2px solid var(--col-amber-dim);
+  padding: 10px 32px;
+  transition: all var(--trans-fast);
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: rgba(200, 134, 10, 0.1);
+  border-color: var(--col-amber);
+  box-shadow: 0 0 20px rgba(200, 134, 10, 0.3);
+}
+
+/* ── Anomaly Warning ── */
+.anomaly-indicator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--col-red-bright);
+  animation: pulse-red 1s ease-in-out infinite;
+  opacity: 0;
+}
+
+.anomaly-indicator.visible {
+  opacity: 1;
+}
+
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 4px rgba(204,34,34,0.5); transform: scale(1); }
+  50%       { box-shadow: 0 0 12px rgba(204,34,34,0.8); transform: scale(1.2); }
+}
+
+/* ── Laptop Content - specific states ── */
+.log-entry {
+  margin-bottom: 4px;
+  padding-left: 12px;
+  position: relative;
+}
+
+.log-entry::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  color: var(--col-monitor-dim);
+}
+
+.log-entry.log-hired  { color: var(--col-green); }
+.log-entry.log-reject { color: #886644; }
+.log-entry.log-warn   { color: var(--col-red); }
+.log-entry.log-sys    { color: var(--col-monitor-dim); font-style: italic; }
+
+/* ── Ending screen specifics ── */
+.ending-title {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 10vw, 80px);
+  margin-bottom: 24px;
+  text-shadow: 0 0 30px currentColor;
+}
+
+.ending-title.bad    { color: var(--col-red-bright); }
+.ending-title.good   { color: var(--col-amber); }
+.ending-title.escape { color: #8888cc; }
+
+.ending-desc {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 2;
+  color: var(--col-white-dim);
+  margin-bottom: 32px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ending-stats {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--col-gray);
+  margin-bottom: 32px;
+  line-height: 1.8;
+}
+
+#btn-restart {
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: var(--col-white-dim);
+  background: transparent;
+  border: 1px solid var(--col-gray);
+  padding: 10px 30px;
+  cursor: pointer;
+  transition: all var(--trans-fast);
+}
+
+#btn-restart:hover {
+  border-color: var(--col-white-dim);
+  box-shadow: 0 0 15px rgba(200,192,176,0.2);
+}
