@@ -1,9 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#050505" />
+  <meta name="description" content="Anomaly HRD — Psychological horror game. Night shift. Interview applicants. Detect anomalies. Survive." />
   <title>Anomaly HRD</title>
+
+  <!-- Preload background images for instant display -->
+  <link rel="preload" as="image" href="assets/backgrounds/office_clean.png" />
+  <link rel="preload" as="image" href="assets/backgrounds/office_uneasy.png" />
+  <link rel="preload" as="image" href="assets/backgrounds/office_corrupted.png" />
+  <link rel="preload" as="image" href="assets/backgrounds/office_horror.png" />
 
   <!-- Styles -->
   <link rel="stylesheet" href="styles/base.css" />
@@ -21,7 +29,7 @@
     <div class="title-noise"></div>
     <div class="title-content">
       <div class="title-logo">
-        <p class="title-sub">PT. DIMBUD MENCARI CINTA SEJATI TBK</p>
+        <p class="title-sub">PT. DIMBUD MENCARI CINTA SEJATI Tbk</p>
         <h1 class="title-main">ANOMALY<br/><span>HRD</span></h1>
         <p class="title-tagline">— Night Shift Division —</p>
       </div>
@@ -61,48 +69,52 @@
   ══════════════════════════════════════════ -->
   <div id="screen-game" class="screen">
 
-    <!-- Background: Office Room -->
-    <div id="office-room">
+    <!-- ══ ENVIRONMENT LAYER STACK ══ -->
+    <div id="office-background">
 
-      <!-- Window (left) -->
-      <div id="office-window">
-        <div class="rain-container">
-          <canvas id="rain-canvas"></canvas>
-        </div>
-        <div class="window-city"></div>
-        <div class="lightning-flash" id="lightning-flash"></div>
+      <!-- Layer 1: Base background images (4 states, crossfade) -->
+      <div class="bg-layer" id="bg-clean"></div>
+      <div class="bg-layer" id="bg-uneasy"></div>
+      <div class="bg-layer" id="bg-corrupted"></div>
+      <div class="bg-layer" id="bg-horror"></div>
+
+      <!-- Layer 2: Rain overlay (clipped to window area) -->
+      <div id="rain-overlay">
+        <canvas id="rain-canvas"></canvas>
       </div>
 
-      <!-- Interview Glass (center-top) -->
-      <div id="interview-area">
-        <div id="waiting-room">
-          <div id="applicant-figure" class="hidden">
-            <!-- Applicant visual rendered here -->
-            <div class="applicant-body">
-              <div class="applicant-head" id="applicant-head"></div>
-              <div class="applicant-torso"></div>
-            </div>
-            <div class="applicant-name-tag" id="applicant-name-tag"></div>
-          </div>
-          <div class="chair-visual"></div>
-        </div>
-        <div class="glass-divider">
-          <div class="glass-glare"></div>
-        </div>
-      </div>
+      <!-- Layer 3: Lightning flash -->
+      <div id="lightning-flash"></div>
 
-      <!-- Bookshelf (right) -->
-      <div id="office-shelf">
-        <div class="shelf-books"></div>
-        <div class="shelf-clock" id="wall-clock">
-          <span id="clock-display">22:00</span>
-        </div>
-      </div>
+      <!-- Layer 4: Darkness / vignette progression -->
+      <div id="overlay-darkness"></div>
 
-      <!-- Fluorescent Light -->
+      <!-- Layer 5: Fog / mist -->
+      <div id="overlay-fog"></div>
+
+      <!-- Layer 6: Mold / corruption stains -->
+      <div id="overlay-corruption"></div>
+
+      <!-- Layer 7: Ceiling light flicker source -->
       <div id="ceiling-light" class="flicker"></div>
 
-    </div>
+      <!-- Layer 8: Invisible door hotspot (over door in image) -->
+      <div id="door-hotspot" title="Keluar">
+        <div class="door-hover-hint">[ KELUAR ]</div>
+      </div>
+
+      <!-- Layer 9: Applicant character (above background, below UI) -->
+      <div id="waiting-room">
+        <div id="applicant-figure" class="hidden">
+          <div class="applicant-body">
+            <div class="applicant-head" id="applicant-head"></div>
+            <div class="applicant-torso"></div>
+          </div>
+          <div class="applicant-name-tag" id="applicant-name-tag"></div>
+        </div>
+      </div>
+
+    </div><!-- /office-background -->
 
     <!-- Desk Surface -->
     <div id="desk-surface">
@@ -202,6 +214,13 @@
         <span class="hud-label">SHIFT</span>
         <span id="hud-shift-time">22:00</span>
       </div>
+      <div id="hud-escape" class="hidden">
+        <span class="hud-label hud-escape-hint">[ESC] pergi</span>
+      </div>
+      <!-- Fullscreen button -->
+      <div id="hud-fullscreen" title="Fullscreen [F]">
+        <button id="btn-fullscreen">⛶</button>
+      </div>
     </div>
 
     <!-- Post-decision overlay note -->
@@ -234,14 +253,30 @@
     <div id="horror-text"></div>
   </div>
 
+  <!-- ══════════════════════════════════════════
+       GLOBAL: Loading Overlay
+  ══════════════════════════════════════════ -->
+  <div id="loading-overlay">
+    <div class="loading-inner">
+      <div class="loading-logo">ANOMALY HRD</div>
+      <div class="loading-bar-wrap">
+        <div class="loading-bar" id="loading-bar"></div>
+      </div>
+      <div class="loading-text" id="loading-text">Memuat sistem...</div>
+    </div>
+  </div>
+
   <!-- Scripts (order matters) -->
   <script src="data/applicants-data.js"></script>
   <script src="data/anomalies-data.js"></script>
   <script src="data/dialogue-data.js"></script>
   <script src="scripts/utils.js"></script>
   <script src="scripts/audio.js"></script>
+  <script src="scripts/room.js"></script>
   <script src="scripts/effects.js"></script>
+  <script src="scripts/polish.js"></script>
   <script src="scripts/dialogue.js"></script>
+  <script src="scripts/generator.js"></script>
   <script src="scripts/applicants.js"></script>
   <script src="scripts/anomalies.js"></script>
   <script src="scripts/endings.js"></script>

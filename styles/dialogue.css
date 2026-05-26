@@ -1,66 +1,226 @@
 /* ============================================
-   DIALOGUE.CSS — Typewriter & Dialogue styling
+   DIALOGUE.CSS — Dialogue Box System
    Anomaly HRD
    ============================================ */
 
-/* Typewriter cursor */
-.typewriter-cursor {
+/* ── Action Panel wrapper (sits inside desk-surface) ── */
+#action-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 280px;
+  min-width: 240px;
+  height: 100%;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* ── Dialogue Box ── */
+#dialogue-box {
+  background: #080604;
+  border: 1px solid #2a2010;
+  border-radius: 2px;
+  padding: 10px 12px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Corner bracket decorations */
+#dialogue-box::before {
+  content: '┌';
+  position: absolute;
+  top: 4px; left: 5px;
+  font-size: 10px;
+  color: #3a2e10;
+  line-height: 1;
+  font-family: var(--font-mono);
+}
+
+#dialogue-box::after {
+  content: '┘';
+  position: absolute;
+  bottom: 4px; right: 5px;
+  font-size: 10px;
+  color: #3a2e10;
+  line-height: 1;
+  font-family: var(--font-mono);
+}
+
+/* Speaker name */
+.dialogue-speaker {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  color: var(--col-amber);
+  text-shadow: 0 0 8px rgba(200,160,48,0.4);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #201808;
+  position: relative;
+}
+
+/* Speaker underline glow */
+.dialogue-speaker::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0;
+  width: 40%;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(200,160,48,0.3), transparent);
+}
+
+/* System speaker variant */
+.dialogue-speaker.system {
+  color: var(--col-red-bright);
+  text-shadow: 0 0 8px rgba(238,51,51,0.4);
+}
+
+/* Dialogue text */
+.dialogue-text {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: rgba(200,184,140,0.85);
+  line-height: 1.65;
+  letter-spacing: 0.2px;
+  min-height: 32px;
+}
+
+/* Typing cursor */
+.dialogue-text .cursor {
   display: inline-block;
   width: 7px;
-  height: 13px;
-  background: var(--col-monitor-text);
-  margin-left: 2px;
-  vertical-align: middle;
-  animation: blink 0.7s step-end infinite;
+  height: 11px;
+  background: rgba(200,184,140,0.6);
+  animation: blink-slow 0.9s step-end infinite;
+  vertical-align: bottom;
+  margin-left: 1px;
 }
 
-/* Dialogue text animating in */
-.dialogue-text.typing {
-  /* Nothing special, managed by JS char-by-char */
+/* Next indicator */
+.dialogue-next {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--col-amber-dim);
+  text-align: right;
+  margin-top: 4px;
+  cursor: pointer;
+  transition: color var(--trans-fast);
+  user-select: none;
 }
 
-/* Email typewriter */
-.email-body p {
-  margin-bottom: 8px;
-}
-
-/* Anomaly hint — subtle discomfort */
-.anomaly-hint {
-  color: var(--col-red);
-  font-style: italic;
-  font-size: 11px;
-  margin-top: 8px;
-  opacity: 0;
-  animation: fade-in-hint 0.5s ease forwards;
-}
-
-@keyframes fade-in-hint {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 0.7; }
-}
-
-/* Stressed / anomaly dialogue */
-.dialogue-text.anomaly-voice {
-  color: #cc8844;
-  letter-spacing: 0.5px;
-}
-
-.dialogue-text.anomaly-glitch {
-  animation: text-glitch 0.5s steps(2) infinite;
-}
-
-@keyframes text-glitch {
-  0%, 100% { transform: none; filter: none; }
-  33%       { transform: translateX(1px); filter: hue-rotate(30deg); }
-  66%       { transform: translateX(-1px); filter: hue-rotate(-30deg); }
-}
-
-/* Normal applicant dialogue */
-.dialogue-text.normal-voice {
-  color: var(--col-monitor-text);
-}
-
-/* System/boss messages */
-.dialogue-text.boss-voice {
+.dialogue-next:hover {
   color: var(--col-amber);
+}
+
+/* ── Question Panel ── */
+#question-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: 4px;
+}
+
+.panel-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 2.5px;
+  color: var(--col-gray);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+#question-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.btn-question {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: rgba(200,160,60,0.65);
+  background: rgba(200,160,48,0.03);
+  border: 1px solid #221c0c;
+  padding: 5px 9px;
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--trans-fast);
+  border-radius: 1px;
+  letter-spacing: 0.2px;
+  line-height: 1.45;
+  flex-shrink: 0;
+}
+
+.btn-question:hover {
+  color: var(--col-amber);
+  background: rgba(200,160,48,0.08);
+  border-color: #3a3018;
+}
+
+.btn-question.used {
+  color: #2a2415;
+  border-color: #181408;
+  pointer-events: none;
+  background: transparent;
+}
+
+/* ── Decision Panel ── */
+#decision-panel {
+  flex-shrink: 0;
+}
+
+#decision-panel .panel-label {
+  margin-bottom: 5px;
+}
+
+.decision-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+#btn-hire {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #22aa44;
+  background: rgba(34,170,68,0.04);
+  border: 1px solid #1a5028;
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: all var(--trans-normal);
+  border-radius: 1px;
+}
+
+#btn-hire:hover {
+  background: rgba(34,170,68,0.11);
+  border-color: #22aa44;
+  text-shadow: 0 0 8px rgba(34,170,68,0.45);
+  box-shadow: 0 0 12px rgba(34,170,68,0.08);
+}
+
+#btn-reject {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #aa2222;
+  background: rgba(170,34,34,0.04);
+  border: 1px solid #501818;
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: all var(--trans-normal);
+  border-radius: 1px;
+}
+
+#btn-reject:hover {
+  background: rgba(170,34,34,0.11);
+  border-color: #cc2222;
+  text-shadow: 0 0 8px rgba(204,34,34,0.45);
+  box-shadow: 0 0 12px rgba(204,34,34,0.08);
 }

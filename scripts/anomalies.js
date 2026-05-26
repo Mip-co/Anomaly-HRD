@@ -1,63 +1,67 @@
 /* ============================================
-   SCRIPTS/ANOMALIES.JS — Anomaly Detection Logic
-   Anomaly HRD
+   SCRIPTS/ANOMALIES.JS — Phase 3
+   Handles all 7 anomaly types in evaluation,
+   escape hint reveal, horror event picker
    ============================================ */
 
 const AnomalySystem = (() => {
 
-  // ── Evaluate player decision ──
-  // Returns: { correct: bool, penalty: bool, message: string }
+  // ── Evaluate decision ──
   const evaluate = (applicant, decision) => {
     const isAnomaly = applicant.isAnomaly;
 
     if (isAnomaly && decision === 'hire') {
-      // ❌ Hired an anomaly = WRONG
       return {
-        correct: false,
-        penalty: true,
-        logType: 'warn',
-        message: DIALOGUE_DATA.system.anomalyHired
+        correct:  false,
+        penalty:  true,
+        logType:  'warn',
+        message:  DIALOGUE_DATA.system.anomalyHired,
       };
     }
 
     if (!isAnomaly && decision === 'reject') {
-      // ❌ Rejected a normal person = mild warning, no heart loss
       return {
-        correct: false,
-        penalty: false,
-        logType: 'warn',
-        message: DIALOGUE_DATA.system.normalRejected
+        correct:  false,
+        penalty:  false,
+        logType:  'warn',
+        message:  DIALOGUE_DATA.system.normalRejected,
       };
     }
 
     if (isAnomaly && decision === 'reject') {
-      // ✅ Correctly rejected anomaly
+      const typeLabel = ANOMALY_TYPES[applicant.anomalyType]?.name || 'Anomali';
       return {
-        correct: true,
-        penalty: false,
-        logType: 'sys',
-        message: `BENAR: Entitas mencurigakan berhasil ditolak.`
+        correct:  true,
+        penalty:  false,
+        logType:  'sys',
+        message:  `BENAR: [${typeLabel}] berhasil diidentifikasi dan ditolak.`,
       };
     }
 
-    // ✅ Normal + hired
+    // Normal + hired ✅
     return {
-      correct: true,
-      penalty: false,
-      logType: 'hired',
-      message: DIALOGUE_DATA.system.hired(applicant.name)
+      correct:  true,
+      penalty:  false,
+      logType:  'hired',
+      message:  DIALOGUE_DATA.system.hired(applicant.name),
     };
   };
 
-  // ── Pick random horror event ──
+  // ── Random horror event ──
   const randomHorrorEvent = () => {
     return Utils.random(DIALOGUE_DATA.horrorEvents);
   };
 
-  return {
-    evaluate,
-    randomHorrorEvent
+  // ── Reveal escape hint in HUD ──
+  const revealEscapeHint = () => {
+    const el = Utils.el('hud-escape');
+    if (el) {
+      Utils.show(el);
+      setTimeout(() => Utils.hide(el), 8000); // disappears after 8s — blink and miss it
+    }
   };
+
+  return { evaluate, randomHorrorEvent, revealEscapeHint };
 
 })();
 

@@ -7,7 +7,8 @@
 const Game = (() => {
 
   // ── Config ──
-  const QUEUE_SIZE = 5; // Phase 3: 5 applicants/run. Phase 4+ expand to 10+
+  const QUEUE_SIZE = 10;
+  const FINAL_OFFICE_EVENT_AT = QUEUE_SIZE - 1;
 
   // ── State ──
   const state = {
@@ -24,7 +25,9 @@ const Game = (() => {
     questionsAsked: new Set(),
     time:           { hour: 22, minute: 0 },
     ended:          false,
-    escapeAvailable: false,  // unlocks after first horror event
+    escapeAvailable:         false,
+    finalOfficeEventDone:    false,
+    perfectRun:              true,   // stays true if no hearts lost
   };
 
   // ── Init ──
@@ -39,14 +42,24 @@ const Game = (() => {
   // TITLE
   // ═══════════════════════════════════════════
   const _bindTitle = () => {
-    document.addEventListener('keydown', _titleAnyKey, { once: true });
-    document.addEventListener('click',   _titleAnyKey, { once: true });
-  };
+    let triggered = false;
 
-  const _titleAnyKey = async () => {
-    AudioManager.init();
-    await Utils.switchScreen('screen-title', 'screen-intro');
-    _startIntro();
+    const handler = async (e) => {
+      // Ignore modifier keys only
+      if (e.type === 'keydown' && ['Shift','Control','Alt','Meta','Tab'].includes(e.key)) return;
+      if (triggered) return;
+      triggered = true;
+
+      document.removeEventListener('keydown', handler);
+      document.removeEventListener('click',   handler);
+
+      AudioManager.init();
+      await Utils.switchScreen('screen-title', 'screen-intro');
+      _startIntro();
+    };
+
+    document.addEventListener('keydown', handler);
+    document.addEventListener('click',   handler);
   };
 
   // ═══════════════════════════════════════════
@@ -69,6 +82,16 @@ const Game = (() => {
 
     state.phase          = 'playing';
     state.applicantQueue = ApplicantSystem.buildQueue(QUEUE_SIZE);
+
+    // Init room system with escape callback
+    RoomSystem.init(() => {
+      if (state.escapeAvailable && state.phase === 'playing') {
+        _triggerEnding('escape');
+      }
+    });
+    RoomSystem.initRain();
+    RoomSystem.scheduleLightning(0);
+    RoomSystem.setState('clean');
 
     Effects.init();
     _renderHearts();
@@ -95,8 +118,17 @@ const Game = (() => {
     state.currentIndex++;
 
     if (state.currentIndex >= state.applicantQueue.length) {
-      await _triggerEnding('good');
+      // Check for secret ending: perfect run (no hearts lost)
+      const endingType = state.perfectRun ? 'secret' : 'good';
+      await _triggerEnding(endingType);
       return;
+    }
+
+    // Final office event — triggers before the last applicant
+    if (state.currentIndex === FINAL_OFFICE_EVENT_AT && !state.finalOfficeEventDone) {
+      state.finalOfficeEventDone = true;
+      await Effects.triggerFinalOfficeEvent();
+      await Utils.sleep(600);
     }
 
     const applicant = state.applicantQueue[state.currentIndex];
@@ -108,13 +140,19 @@ const Game = (() => {
       DIALOGUE_DATA.system.applicantIn(applicant.name), 'sys'
     );
 
-    // Advance clock
+    // Advance clock with pulse animation
     const newTime = Utils.advanceTime(state.time);
     Effects.updateClock(newTime);
+    Polish.pulseClockUpdate(newTime);
     _updateHUD();
 
     // Load into scene
     ApplicantSystem.loadApplicant(applicant);
+    Polish.animateCVIn();
+
+    // SFX: chair creak as applicant sits, paper slide for CV
+    setTimeout(() => AudioManager.play('chairCreak'), 600);
+    setTimeout(() => AudioManager.play('paperSlide'), 300);
 
     await Utils.sleep(900);
 
@@ -209,6 +247,7 @@ const Game = (() => {
     Utils.el('btn-reject').disabled = true;
 
     ApplicantSystem.stampCV(decision);
+    AudioManager.play('stamp');
 
     const result = AnomalySystem.evaluate(applicant, decision);
     AudioManager.play(decision === 'hire' ? 'hire' : 'reject');
@@ -254,7 +293,11 @@ const Game = (() => {
     _renderHearts();
 
     const tension = state.maxHearts - state.hearts;
+    // Animate the specific heart that was lost
+    Polish.animateHeartLoss(state.hearts);
     Effects.setTension(tension);
+    RoomSystem.setFromHeartsLost(state.maxHearts - state.hearts);
+    RoomSystem.scheduleLightning(tension);
 
     AudioManager.play('heartLoss');
     Utils.flashScreen('red', 650);
@@ -268,6 +311,9 @@ const Game = (() => {
 
     // Unlock escape after first penalty
     state.escapeAvailable = true;
+    state.perfectRun = false;
+    AnomalySystem.revealEscapeHint();
+    RoomSystem.unlockEscape();
 
     await Utils.sleep(500);
 
@@ -330,9 +376,11 @@ const Game = (() => {
       await Effects.triggerBadEndingSequence();
       await Utils.sleep(700);
     } else if (type === 'good') {
-      AudioManager.play('morning');
-      Effects.setTension(0);
-      await Utils.sleep(1200);
+      await Effects.triggerGoodEndingSequence();
+    } else if (type === 'secret') {
+      // Secret ending: deceptive good start, then twist
+      await Effects.triggerGoodEndingSequence();
+      await Utils.sleep(1000);
     } else if (type === 'escape') {
       Effects.glitchScreen(400);
       AudioManager.play('static');
@@ -350,9 +398,14 @@ const Game = (() => {
   };
 
   // ── Boot ──
-  const boot = () => {
+  const boot = async () => {
+    // Phase 5: preload assets first
+    await Polish.preload();
+
     init();
     _bindDecisions();
+    Polish.initFullscreen();
+    Polish.enhanceTitleScreen();
   };
 
   return { boot };

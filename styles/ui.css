@@ -3,22 +3,6 @@
    Anomaly HRD
    ============================================ */
 
-/* ── Action Panel ── */
-#action-panel {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: min(420px, 50%);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 10px 12px;
-  gap: 10px;
-  background: linear-gradient(270deg, rgba(10,8,4,0.95) 0%, transparent 100%);
-  z-index: 20;
-}
-
 /* ── Dialogue Box ── */
 #dialogue-box {
   background: rgba(5, 14, 5, 0.92);
@@ -272,4 +256,54 @@
 #btn-restart:hover {
   border-color: var(--col-white-dim);
   box-shadow: 0 0 15px rgba(200,192,176,0.2);
+}
+
+/* ── Escape hint ── */
+.hud-escape-hint {
+  font-size: 10px;
+  color: var(--col-red);
+  letter-spacing: 1px;
+  animation: blink 2s step-end infinite;
+  opacity: 0.7;
+}
+
+/* ── Wrong shadow drift animation ── */
+@keyframes shadow-drift {
+  0%   { transform: translateX(-50%) scaleX(1.4) translateY(0); opacity: 0.7; }
+  30%  { transform: translateX(-40%) scaleX(1.8) translateY(-4px); opacity: 0.5; }
+  60%  { transform: translateX(-60%) scaleX(1.2) translateY(2px); opacity: 0.8; }
+  100% { transform: translateX(-50%) scaleX(1.4) translateY(0); opacity: 0.7; }
+}
+
+/* ── Anomaly: no-blink stare overlay on head ── */
+.applicant-body.no-blink .applicant-head {
+  box-shadow: 0 0 0 2px rgba(180, 0, 0, 0);
+  animation: stare-pulse 3s ease-in-out infinite;
+}
+
+@keyframes stare-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(180, 0, 0, 0); }
+  50%       { box-shadow: 0 0 8px 2px rgba(180, 0, 0, 0.15); }
+}
+
+/* ── Anomaly: wrong-shadow figure aura ── */
+.applicant-body.wrong-shadow .applicant-head {
+  animation: none;
+  filter: brightness(1.02);
+}
+
+/* ── Ending screen pre tag (stats) ── */
+.ending-stats pre {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--col-gray);
+  line-height: 1.7;
+  text-align: left;
+  display: inline-block;
+  margin-bottom: 28px;
+}
+
+/* ── Ending screen CRT overlay ── */
+#screen-ending .crt-overlay {
+  z-index: 10;
 }

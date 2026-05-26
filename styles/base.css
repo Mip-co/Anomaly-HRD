@@ -86,6 +86,22 @@ button {
   opacity: 1;
 }
 
+/* Title + Intro + Ending: centered content */
+#screen-title.active,
+#screen-intro.active,
+#screen-ending.active {
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* Game screen: column layout, no centering */
+#screen-game.active {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
 .screen.fade-out {
   opacity: 0;
   pointer-events: none;
@@ -359,4 +375,349 @@ button {
   20%  { opacity: 1; transform: scale(1.05); }
   80%  { opacity: 1; }
   100% { opacity: 0; }
+}
+
+/* ══════════════════════════════════════════
+   PHASE 4: ENDING SCREEN ADDITIONS
+   ══════════════════════════════════════════ */
+
+/* ── Escape ending: phone choice ── */
+.escape-choice-box {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.escape-choice-label {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--col-white-dim);
+  letter-spacing: 2px;
+  animation: blink 1.2s step-end infinite;
+}
+
+.escape-btn-row {
+  display: flex;
+  gap: 24px;
+}
+
+.escape-btn {
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 3px;
+  padding: 12px 32px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.escape-btn-answer {
+  color: var(--col-amber);
+  border: 2px solid var(--col-amber-dim);
+}
+
+.escape-btn-answer:hover {
+  background: rgba(200,134,10,0.12);
+  border-color: var(--col-amber);
+  box-shadow: 0 0 16px rgba(200,134,10,0.3);
+}
+
+.escape-btn-ignore {
+  color: var(--col-gray);
+  border: 2px solid #333;
+}
+
+.escape-btn-ignore:hover {
+  border-color: var(--col-white-dim);
+  color: var(--col-white-dim);
+}
+
+/* ── Secret ending: email panel ── */
+.secret-email-wrap {
+  width: min(680px, 88vw);
+  background: var(--col-monitor-bg);
+  border: 1px solid var(--col-monitor-dim);
+  border-radius: 3px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.8), 0 0 12px rgba(51,204,51,0.06);
+}
+
+.secret-email-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--col-monitor-dim);
+  border-bottom: 1px solid #112211;
+  padding-bottom: 10px;
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+}
+
+.secret-email-body {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--col-monitor-text);
+  min-height: 120px;
+}
+
+.secret-email-body p {
+  margin-bottom: 6px;
+}
+
+/* Secret report override */
+.secret-report pre {
+  color: var(--col-red);
+  text-shadow: 0 0 6px rgba(204,34,34,0.3);
+}
+
+/* ── Good ending: morning warmth on screen ── */
+#screen-ending.morning-tint {
+  background: linear-gradient(180deg, #0d0b06 0%, #0a0804 100%) !important;
+}
+
+/* ── Ending title variants ── */
+.ending-title.escape_answer { color: #8888cc; }
+.ending-title.escape_ignore { color: var(--col-gray); }
+.ending-title.secret {
+  color: var(--col-monitor-text);
+  text-shadow: 0 0 30px rgba(51,204,51,0.5);
+  font-size: clamp(40px, 8vw, 68px);
+}
+
+/* ══════════════════════════════════════════
+   PHASE 5: LOADING OVERLAY
+   ══════════════════════════════════════════ */
+
+#loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: #020202;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#loading-overlay.done {
+  pointer-events: none;
+}
+
+.loading-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: min(400px, 80vw);
+}
+
+.loading-logo {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 48px);
+  color: var(--col-amber);
+  letter-spacing: 6px;
+  text-shadow: 0 0 20px rgba(200,134,10,0.4);
+}
+
+.loading-bar-wrap {
+  width: 100%;
+  height: 2px;
+  background: #1a1208;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.loading-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--col-amber);
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px rgba(200,134,10,0.6);
+}
+
+.loading-text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--col-gray);
+  letter-spacing: 1px;
+  min-height: 16px;
+}
+
+/* ══════════════════════════════════════════
+   PHASE 5: FULLSCREEN BUTTON
+   ══════════════════════════════════════════ */
+
+#hud-fullscreen {
+  margin-left: auto;
+}
+
+#btn-fullscreen {
+  background: transparent;
+  border: 1px solid #2a2218;
+  color: var(--col-gray);
+  font-size: 16px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.15s ease;
+  line-height: 1;
+  padding: 0;
+}
+
+#btn-fullscreen:hover {
+  border-color: var(--col-amber-dim);
+  color: var(--col-amber);
+  background: rgba(200,134,10,0.06);
+}
+
+/* ══════════════════════════════════════════
+   PHASE 5: TITLE SCREEN POLISH
+   ══════════════════════════════════════════ */
+
+/* Animated scanline across title */
+#screen-title::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(200,134,10,0.15) 30%,
+    rgba(200,134,10,0.3) 50%,
+    rgba(200,134,10,0.15) 70%,
+    transparent 100%
+  );
+  animation: title-scan 8s linear infinite;
+  pointer-events: none;
+  z-index: 3;
+}
+
+@keyframes title-scan {
+  0%   { top: -1px; opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Title VT323 font size — bigger and more centered */
+.title-main {
+  font-family: var(--font-display);
+  font-size: clamp(80px, 16vw, 160px);
+  line-height: 0.88;
+  color: var(--col-white-dim);
+  text-shadow:
+    0 0 20px rgba(200,192,176,0.25),
+    0 0 60px rgba(200,192,176,0.08);
+  letter-spacing: -2px;
+}
+
+.title-main span {
+  color: var(--col-red-bright);
+  text-shadow:
+    0 0 20px rgba(204,34,34,0.6),
+    0 0 60px rgba(204,34,34,0.25);
+}
+
+/* ══════════════════════════════════════════
+   PHASE 5: INTRO SCREEN POLISH
+   ══════════════════════════════════════════ */
+
+#screen-intro {
+  background: #050505;
+  gap: 24px;
+  padding: 32px;
+}
+
+.intro-monitor {
+  width: min(680px, 90vw);
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  border-radius: 3px;
+  box-shadow:
+    0 0 60px rgba(0,0,0,0.9),
+    inset 0 0 30px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(51,204,51,0.04);
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════
+   PHASE 5: RESPONSIVE — narrow screens
+   ══════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+  #cv-panel {
+    width: 160px;
+    min-width: 140px;
+    font-size: 10px;
+  }
+
+  .cv-field strong { font-size: 10px; }
+
+  #action-panel {
+    width: 100%;
+    background: linear-gradient(0deg, rgba(5,4,2,0.97) 0%, transparent 100%);
+    bottom: 0; right: 0; left: 0;
+    max-height: 45vh;
+  }
+
+  .btn-hire, .btn-reject {
+    font-size: 18px;
+    padding: 10px 6px;
+  }
+
+  .hud-label { font-size: 8px; }
+  #hud-target, #hud-shift-time { font-size: 16px; }
+
+  #hud { gap: 24px; padding: 0 12px; }
+}
+
+@media (max-width: 480px) {
+  #laptop-panel { display: none; }
+  #coffee-mug   { display: none; }
+}
+
+/* ══════════════════════════════════════════
+   PHASE 5: SMOOTH CV HIDE when hidden
+   ══════════════════════════════════════════ */
+
+#cv-panel.hidden {
+  display: none !important;
+}
+
+/* ══════════════════════════════════════════
+   PHASE 5: RESULT OVERLAY POLISH
+   ══════════════════════════════════════════ */
+
+#result-overlay {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 500;
+  pointer-events: none;
+  text-align: center;
+}
+
+#result-message {
+  font-family: var(--font-display);
+  font-size: 58px;
+  letter-spacing: 6px;
+  text-shadow: 0 0 30px currentColor;
+  animation: result-fade 1.6s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+
+@keyframes result-fade {
+  0%   { opacity: 0; transform: scale(0.7) translateY(8px); filter: blur(4px); }
+  15%  { opacity: 1; transform: scale(1.06) translateY(0); filter: blur(0); }
+  75%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.95) translateY(-4px); }
 }

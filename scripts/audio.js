@@ -386,7 +386,63 @@ const AudioManager = (() => {
       _tone(523, 'sine', 2.0, 0.15);
       _tone(659, 'sine', 2.5, 0.1, 0.5);
       _tone(784, 'sine', 3.0, 0.08, 1.0);
-    }
+    },
+
+    // Phase 5: Chair creak as applicant sits down
+    chairCreak: () => {
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const g   = ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(180, ctx.currentTime);
+      osc.frequency.linearRampToValueAtTime(95, ctx.currentTime + 0.3);
+      osc.frequency.exponentialRampToValueAtTime(60, ctx.currentTime + 0.7);
+      g.gain.setValueAtTime(0.08, ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.14, ctx.currentTime + 0.15);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.7);
+      osc.connect(g); g.connect(masterGain);
+      osc.start(); osc.stop(ctx.currentTime + 0.7);
+      _static(0.08, 0.06);
+    },
+
+    // Phase 5: Paper slide — CV slides onto desk
+    paperSlide: () => {
+      _static(0.18, 0.22);
+      setTimeout(() => _static(0.10, 0.12), 100);
+    },
+
+    // Phase 5: Door rattle (locked)
+    doorRattle: () => {
+      _tone(110, 'sawtooth', 0.06, 0.2);
+      _tone(115, 'sawtooth', 0.05, 0.18, 0.06);
+      _static(0.04, 0.08);
+      setTimeout(() => {
+        _tone(108, 'sawtooth', 0.06, 0.18);
+        _static(0.03, 0.07);
+      }, 180);
+    },
+
+    // Phase 5: Stamp sound — CV stamped
+    stamp: () => {
+      _tone(120, 'square', 0.04, 0.4);
+      _static(0.06, 0.3);
+    },
+
+    // Phase 5: UI confirm
+    uiConfirm: () => {
+      _tone(660, 'sine', 0.08, 0.2);
+      _tone(880, 'sine', 0.06, 0.15, 0.06);
+    },
+
+    // Phase 5: Distant phone ring
+    phoneRing: () => {
+      const ring = () => {
+        _tone(1200, 'sine', 0.12, 0.15);
+        _tone(1400, 'sine', 0.10, 0.12, 0.12);
+      };
+      ring();
+      setTimeout(ring, 500);
+    },
   };
 
   // ═══════════════════════════════════════════

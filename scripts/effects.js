@@ -393,7 +393,7 @@ const Effects = (() => {
 
   // ── Clock update ──
   const updateClock = (timeString) => {
-    ['clock-display', 'hud-shift-time', 'intro-time'].forEach(id => {
+    ['hud-shift-time', 'intro-time', 'clock-display'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.textContent = timeString;
     });
@@ -419,32 +419,258 @@ const Effects = (() => {
 
   // ── Bad ending sequence ──
   const triggerBadEndingSequence = async () => {
-    // Lights out
-    triggerFlicker(3);
-    await Utils.sleep(400);
+    const game  = document.getElementById('screen-game');
     const light = document.getElementById('ceiling-light');
-    if (light) light.style.opacity = '0';
+    const win   = document.getElementById('office-window');
 
-    // Everything goes dark
-    const game = document.getElementById('screen-game');
-    if (game) {
-      game.style.transition = 'filter 2s ease';
-      game.style.filter = 'brightness(0.1) saturate(0)';
+    // Phase 1: erratic flicker
+    triggerFlicker(3);
+    AudioManager.play('creak');
+    await Utils.sleep(500);
+
+    // Phase 2: silhouettes fill the waiting room
+    const waitRoom = document.getElementById('waiting-room');
+    if (waitRoom) {
+      for (let i = 0; i < 4; i++) {
+        const shade = document.createElement('div');
+        const xPct  = 15 + i * 18;
+        shade.style.cssText = `
+          position:absolute; bottom:0; left:${xPct}%;
+          width:28px; height:80px;
+          background: rgba(0,0,0,0.85);
+          border-radius: 50% 50% 0 0;
+          filter: blur(2px);
+          opacity:0; transition: opacity ${0.4 + i * 0.2}s ease;
+          z-index:5;
+        `;
+        shade.dataset.shade = '1';
+        waitRoom.appendChild(shade);
+        setTimeout(() => shade.style.opacity = '0.8', 100 + i * 300);
+
+        // Head for each shade
+        const head = document.createElement('div');
+        head.style.cssText = `
+          position:absolute; bottom:78px; left:${xPct + 1}%;
+          width:22px; height:22px;
+          background: rgba(0,0,0,0.85);
+          border-radius:50%; filter:blur(1.5px);
+          opacity:0; transition: opacity ${0.4 + i * 0.2}s ease;
+          z-index:5;
+        `;
+        head.dataset.shade = '1';
+        waitRoom.appendChild(head);
+        setTimeout(() => head.style.opacity = '0.8', 100 + i * 300);
+      }
     }
 
-    await Utils.sleep(1000);
+    await Utils.sleep(1400);
+    AudioManager.play('knock');
+    await Utils.sleep(300);
+    AudioManager.play('knock');
+
+    // Phase 3: door creaks open (office-shelf simulated)
+    const shelf = document.getElementById('office-shelf');
+    if (shelf) {
+      shelf.style.transition = 'filter 1.5s ease, transform 1.5s ease';
+      shelf.style.filter = 'brightness(0.05)';
+      shelf.style.transform = 'translateX(8px)';
+    }
+
+    // Phase 4: window — something presses against glass
+    if (win) {
+      const press = document.createElement('div');
+      press.style.cssText = `
+        position:absolute; inset:0; z-index:20; pointer-events:none;
+        background: radial-gradient(ellipse 35% 45% at 50% 45%,
+          rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
+        opacity:0; transition: opacity 1s ease;
+      `;
+      win.appendChild(press);
+      setTimeout(() => press.style.opacity = '1', 100);
+    }
+
+    // Phase 5: everything goes dark
+    if (game) {
+      game.style.transition = 'filter 2.5s ease';
+      game.style.filter = 'brightness(0.06) saturate(0)';
+    }
+    if (light) {
+      light.style.transition = 'opacity 1s ease';
+      light.style.opacity = '0';
+    }
+
+    await Utils.sleep(2000);
+    AudioManager.play('heartLoss');
+    shake(500, 2);
+    await Utils.sleep(600);
+
+    // Phase 6: jumpscares
     await triggerJumpscare('shadow');
-    await Utils.sleep(500);
+    await Utils.sleep(350);
     await triggerJumpscare('face');
+    await Utils.sleep(200);
+    await triggerJumpscare('static');
+  };
+
+  // ── Final office event (before last applicant) ──
+  const triggerFinalOfficeEvent = async () => {
+    const game  = document.getElementById('screen-game');
+    const light = document.getElementById('ceiling-light');
+    const win   = document.getElementById('office-window');
+
+    // Clock stops — rewind
+    const clockEl = document.getElementById('clock-display');
+    if (clockEl) {
+      const orig = clockEl.textContent;
+      clockEl.style.color = '#cc2222';
+      clockEl.textContent = '00:00';
+      setTimeout(() => {
+        clockEl.textContent = orig;
+        clockEl.style.color = '';
+      }, 2500);
+    }
+
+    // Fluorescent light goes to panic flicker
+    triggerFlicker(3);
+    await Utils.sleep(300);
+    triggerFlicker(3);
+    await Utils.sleep(400);
+
+    // Everything briefly inverts
+    if (game) {
+      game.style.transition = 'filter 0.1s';
+      game.style.filter = 'invert(0.08) hue-rotate(180deg)';
+      await Utils.sleep(150);
+      game.style.filter = '';
+      await Utils.sleep(100);
+      game.style.filter = 'invert(0.04) hue-rotate(90deg)';
+      await Utils.sleep(100);
+      game.style.filter = '';
+    }
+
+    // Something at the window — full silhouette, then gone
+    if (win) {
+      const ghost = document.createElement('div');
+      ghost.style.cssText = `
+        position:absolute; bottom:15%; left:50%;
+        transform:translateX(-50%);
+        width:34px; height:75px;
+        background: rgba(0,0,0,0.95);
+        border-radius:50% 50% 0 0; filter:blur(1px);
+        z-index:20; opacity:0;
+        transition: opacity 0.2s ease;
+        pointer-events:none;
+      `;
+      const ghostHead = document.createElement('div');
+      ghostHead.style.cssText = `
+        position:absolute; top:-26px; left:50%;
+        transform:translateX(-50%);
+        width:26px; height:26px;
+        background:rgba(0,0,0,0.95);
+        border-radius:50%; filter:blur(1px);
+      `;
+      ghost.appendChild(ghostHead);
+      win.appendChild(ghost);
+
+      AudioManager.play('creak');
+      ghost.style.opacity = '1';
+      await Utils.sleep(800);
+      ghost.style.transition = 'opacity 0.05s';
+      ghost.style.opacity = '0';
+      await Utils.sleep(100);
+      ghost.style.opacity = '1';
+      await Utils.sleep(60);
+      ghost.style.opacity = '0';
+      ghost.remove();
+    }
+
+    // VHS burst
+    triggerVHSError();
+    await Utils.sleep(100);
+    triggerVHSError();
+
+    AudioManager.play('whisper');
+    await Utils.sleep(600);
+
+    // Laptop screen shows scrambled message briefly
+    const laptopContent = document.getElementById('laptop-content');
+    if (laptopContent) {
+      const glitchMsg = document.createElement('div');
+      glitchMsg.className = 'log-entry log-warn';
+      glitchMsg.style.cssText = 'animation: text-glitch 0.3s steps(2) 3; letter-spacing:2px;';
+      glitchMsg.textContent = '█▓▒░ D4TA C0RRUPT ░▒▓█ P3LAM4R T3R4KH1R...';
+      laptopContent.appendChild(glitchMsg);
+      laptopContent.scrollTop = laptopContent.scrollHeight;
+      setTimeout(() => {
+        glitchMsg.textContent = 'Pelamar terakhir akan segera masuk.';
+        glitchMsg.className = 'log-entry log-sys';
+        glitchMsg.style.cssText = '';
+      }, 2000);
+    }
+
+    // Return to normal — but tension stays high
+    setTension(4);
+    await Utils.sleep(800);
+  };
+
+  // ── Good ending sequence (morning light) ──
+  const triggerGoodEndingSequence = async () => {
+    const game  = document.getElementById('screen-game');
+    const light = document.getElementById('ceiling-light');
+    const win   = document.getElementById('office-window');
+
+    // Rain slows (visually — rain canvas handles internally)
+    rainDrops.forEach(d => { d.speed *= 0.4; d.alpha *= 0.5; });
+
+    // Warm light creeps in from window
+    if (win) {
+      const dawn = document.createElement('div');
+      dawn.style.cssText = `
+        position:absolute; inset:0; z-index:15; pointer-events:none;
+        background: linear-gradient(180deg,
+          rgba(255,200,100,0) 0%,
+          rgba(255,180,60,0.18) 100%);
+        opacity:0; transition: opacity 4s ease;
+      `;
+      win.appendChild(dawn);
+      setTimeout(() => dawn.style.opacity = '1', 200);
+    }
+
+    // Fluorescent light warms up
+    if (light) {
+      light.style.transition = 'filter 3s ease, box-shadow 3s ease';
+      light.style.filter = 'brightness(1.3) sepia(0.2)';
+      light.style.boxShadow = `
+        0 0 30px 15px rgba(255,220,140,0.18),
+        0 0 80px 40px rgba(255,200,100,0.08)
+      `;
+    }
+
+    // Very subtle screen warmth
+    if (game) {
+      game.style.transition = 'filter 4s ease';
+      game.style.filter = 'sepia(0.08) brightness(1.04)';
+    }
+
+    // Clock moves to 06:00
+    const clockEl = document.getElementById('clock-display');
+    if (clockEl) {
+      await Utils.sleep(1500);
+      clockEl.style.transition = 'color 2s ease';
+      clockEl.style.color = '#c8860a';
+      clockEl.textContent = '06:00';
+    }
+
+    await Utils.sleep(2000);
   };
 
   // ═══════════════════════════════════════════
-  // INIT
+  // INIT — delegate rain/lightning to RoomSystem
   // ═══════════════════════════════════════════
   const init = () => {
-    initRain();
+    // Rain and lightning now handled by RoomSystem
+    // (keeping fog canvas and tension events)
     initFog();
-    scheduleLightning();
     startScanLine();
     _startAmbientFlicker();
     _startTensionEvents();
@@ -458,6 +684,8 @@ const Effects = (() => {
     triggerJumpscare,
     triggerVHSError,
     triggerBadEndingSequence,
+    triggerFinalOfficeEvent,
+    triggerGoodEndingSequence,
     glitchScreen,
     shake,
     updateClock,
