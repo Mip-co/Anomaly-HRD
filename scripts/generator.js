@@ -56,6 +56,10 @@ const ApplicantGenerator = (() => {
       diri:        Utils.random(D.diri)(),
     };
 
+    const spriteIndex = index % ASSETS.applicants[genders].length;
+    const sprite = ASSETS.applicants[genders][spriteIndex];
+    const cvPhoto = ASSETS.cvPhotos[genders][spriteIndex];
+
     return {
       id:         `A${String(index + 1).padStart(3, '0')}`,
       name,
@@ -65,9 +69,11 @@ const ApplicantGenerator = (() => {
       education:  `${degree} ${major}, ${uni} (${gradYear})`,
       experience,
       notes:      note,
-      cvPhoto:    face,
-      appearance: face,
+      sprite,
+      cvPhoto,
+      appearance: sprite,
       isAnomaly:  false,
+      _gender:    isMale ? 'male' : 'female',
       dialogues,
       _salary:    salaryBase,
     };

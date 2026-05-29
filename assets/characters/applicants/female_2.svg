@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 200" width="120" height="200">
+  <rect x="28" y="112" width="64" height="88" rx="6" fill="#2a3a1a"/>
+  <!-- Neck -->
+  <rect x="50" y="90" width="20" height="26" fill="#c8a870"/>
+  <!-- Head -->
+  <ellipse cx="60" cy="70" rx="27" ry="31" fill="#c8a870"/>
+  <!-- Hair bob style -->
+  <ellipse cx="60" cy="42" rx="27" ry="14" fill="#8a5020"/>
+  <rect x="33" y="42" width="54" height="26" fill="#8a5020"/>
+  <rect x="33" y="54" width="8" height="30" rx="4" fill="#8a5020"/>
+  <rect x="79" y="54" width="8" height="30" rx="4" fill="#8a5020"/>
+  <!-- Fringe -->
+  <ellipse cx="50" cy="48" rx="12" ry="8" fill="#7a4018"/>
+  <ellipse cx="70" cy="48" rx="12" ry="8" fill="#7a4018"/>
+  <!-- Eyes -->
+  <ellipse cx="47" cy="68" rx="7" ry="7" fill="#fff"/>
+  <ellipse cx="73" cy="68" rx="7" ry="7" fill="#fff"/>
+  <ellipse cx="47" cy="69" rx="4.5" ry="4.5" fill="#2a4a2a"/>
+  <ellipse cx="73" cy="69" rx="4.5" ry="4.5" fill="#2a4a2a"/>
+  <ellipse cx="48" cy="67" rx="1.5" ry="1.5" fill="#fff"/>
+  <ellipse cx="74" cy="67" rx="1.5" ry="1.5" fill="#fff"/>
+  <!-- Eyebrows -->
+  <path d="M40 57 Q47 54 54 57" stroke="#5a3010" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M66 57 Q73 54 80 57" stroke="#5a3010" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- Nose -->
+  <ellipse cx="60" cy="77" rx="2.5" ry="2" fill="#b09060"/>
+  <!-- Mouth smile -->
+  <path d="M51 86 Q60 92 69 86" stroke="#b06050" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <ellipse cx="40" cy="73" rx="7" ry="4" fill="#e08080" opacity="0.2"/>
+  <ellipse cx="80" cy="73" rx="7" ry="4" fill="#e08080" opacity="0.2"/>
+  <ellipse cx="33" cy="70" rx="5" ry="8" fill="#c8a870"/>
+  <ellipse cx="87" cy="70" rx="5" ry="8" fill="#c8a870"/>
+</svg>

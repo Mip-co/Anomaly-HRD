@@ -16,17 +16,15 @@ const ANOMALY_TYPES = {
     difficulty: 'easy',
     description: 'Foto di CV tidak cocok dengan wajah pelamar yang datang.',
     apply: (applicant) => {
-      const anomalyFaces = ['👽','🤖','💀','🎭','👁️','🫥','👹','🧟'];
-      const normalFaces  = ['👨','👩','🧑'];
-      // CV shows one face, appearance shows another
-      const cvFace   = Utils.random(anomalyFaces);
-      const realFace = Utils.random(normalFaces);
+      const gender = applicant._gender || 'male';
+      const cvAnomalyPool = ASSETS.cvPhotos.anomaly[gender] || ASSETS.cvPhotos.anomaly.male;
+      const anomalyPhoto = Utils.random(cvAnomalyPool);
       return {
         ...applicant,
         isAnomaly: true,
         anomalyType: 'WRONG_FACE',
-        cvPhoto:    cvFace,
-        appearance: realFace,
+        cvPhoto: anomalyPhoto,
+        // Keep actual applicant sprite the same, so mismatch is only in CV photo
       };
     }
   },

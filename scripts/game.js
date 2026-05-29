@@ -7,14 +7,15 @@
 const Game = (() => {
 
   // ── Config ──
-  const QUEUE_SIZE = 10;
-  const FINAL_OFFICE_EVENT_AT = QUEUE_SIZE - 1;
+  const NORMAL_QUEUE_SIZE = 10;
+  const HARD_QUEUE_SIZE = 20;
 
   // ── State ──
   const state = {
     phase:          'title',
     hearts:         5,
     maxHearts:      5,
+    difficulty:     'normal',
     applicantQueue: [],
     currentIndex:   -1,
     processed:      0,
@@ -27,8 +28,12 @@ const Game = (() => {
     ended:          false,
     escapeAvailable:         false,
     finalOfficeEventDone:    false,
+    dimbudSpawned:           false,
     perfectRun:              true,   // stays true if no hearts lost
   };
+
+  const getQueueSize = () => state.difficulty === 'hard' ? HARD_QUEUE_SIZE : NORMAL_QUEUE_SIZE;
+  const getFinalOfficeEventAt = () => state.applicantQueue.length - 1;
 
   // ── Init ──
   const init = () => {
@@ -36,26 +41,132 @@ const Game = (() => {
     _renderHearts();
     DialogueSystem.bindAdvance();
     _bindEscapeKey();
+    // Back to title button (available during gameplay)
+    const backBtn = Utils.el('btn-back-title');
+    if (backBtn) {
+      backBtn.addEventListener('click', async () => {
+        // Stop audio and return to title screen
+        try { AudioManager.stopAll(); } catch (e) {}
+        state.phase = 'title';
+        await Utils.switchScreen('screen-game', 'screen-title');
+      });
+    }
   };
 
   // ═══════════════════════════════════════════
   // TITLE
   // ═══════════════════════════════════════════
   const _bindTitle = () => {
-    let triggered = false;
+    let menuShown = false;
+    let audioStarted = false;
+
+    const showTitleMenu = () => {
+      if (menuShown) return;
+      menuShown = true;
+      const prompt = Utils.el('title-prompt');
+      const menu = Utils.el('title-menu');
+      const btnContinue = Utils.el('btn-continue');
+      const btnEndings = Utils.el('btn-endings');
+      const difficultyPanel = Utils.el('difficulty-panel');
+      const diffButtons = difficultyPanel ? difficultyPanel.querySelectorAll('.difficulty-btn') : [];
+      let panelOpen = false;
+
+      if (prompt) prompt.classList.add('hidden');
+      if (menu) menu.classList.remove('hidden');
+      if (difficultyPanel) difficultyPanel.classList.add('hidden');
+
+      const setDifficultySelection = (choice) => {
+        state.difficulty = choice;
+        diffButtons.forEach(button => {
+          button.classList.toggle('active', button.dataset.difficulty === choice);
+        });
+      };
+
+      const savedDifficulty = window.SaveSystem && SaveSystem.getSave ? (SaveSystem.getSave().currentSave.difficulty || 'normal') : 'normal';
+      setDifficultySelection(savedDifficulty);
+
+      const openDifficultyPanel = () => {
+        if (!difficultyPanel || panelOpen) return;
+        panelOpen = true;
+        if (menu) menu.classList.add('hidden');
+        difficultyPanel.classList.remove('hidden');
+      };
+
+      const startSelectedDifficulty = async () => {
+        if (window.SaveSystem && SaveSystem.saveGame) SaveSystem.saveGame({ difficulty: state.difficulty });
+        const hasEndings = window.SaveSystem && SaveSystem.hasAnyEndingUnlocked ? SaveSystem.hasAnyEndingUnlocked() : false;
+        if (hasEndings) {
+          await Utils.switchScreen('screen-title', 'screen-intro');
+          _startIntro();
+        } else {
+          await Utils.switchScreen('screen-title', 'screen-cinematic');
+          IntroSystem.start(async () => {
+            if (window.SaveSystem && SaveSystem.setHasSeenIntro) SaveSystem.setHasSeenIntro(true);
+            await Utils.switchScreen('screen-cinematic', 'screen-intro');
+            _startIntro();
+          });
+        }
+      };
+
+      diffButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+          setDifficultySelection(button.dataset.difficulty);
+          await startSelectedDifficulty();
+        });
+      });
+
+      // Show/hide continue & endings depending on save
+      try {
+        const hasAny = window.SaveSystem && SaveSystem.hasAnyEndingUnlocked && SaveSystem.hasAnyEndingUnlocked();
+        if (btnContinue) btnContinue.classList.toggle('hidden', !hasAny);
+        if (btnEndings) btnEndings.classList.toggle('hidden', !hasAny);
+      } catch (e) { /* ignore */ }
+
+      // Wire buttons
+      const newBtn = Utils.el('btn-new-game');
+      if (newBtn) newBtn.addEventListener('click', async () => {
+        AudioManager.stopLoop();
+        openDifficultyPanel();
+      });
+
+      if (btnContinue) btnContinue.addEventListener('click', async () => {
+        const s = window.SaveSystem && SaveSystem.loadGame ? SaveSystem.loadGame() : null;
+        const payload = s && s.currentSave ? s.currentSave : null;
+        state.difficulty = payload && payload.difficulty ? payload.difficulty : 'normal';
+
+        // Reset run state (fresh shift)
+        state.hearts = state.maxHearts;
+        state.processed = 0;
+        state.hired = 0;
+        state.rejected = 0;
+        state.anomaliesFound = 0;
+        state.anomaliesHired = 0;
+        state.questionsAsked = new Set();
+        state.currentIndex = -1;
+        state.applicantQueue = ApplicantSystem.buildQueue(getQueueSize());
+
+        // Prepare systems and go directly to intro email (skip cinematic)
+        await Utils.switchScreen('screen-title', 'screen-intro');
+        _startIntro();
+      }, { once: true });
+
+      if (btnEndings) btnEndings.addEventListener('click', async () => {
+        // Render endings archive and switch to endings screen
+        if (window.SaveSystem && SaveSystem.renderEndingsArchive) SaveSystem.renderEndingsArchive();
+        await Utils.switchScreen('screen-title', 'screen-ending');
+      });
+    };
 
     const handler = async (e) => {
       // Ignore modifier keys only
       if (e.type === 'keydown' && ['Shift','Control','Alt','Meta','Tab'].includes(e.key)) return;
-      if (triggered) return;
-      triggered = true;
-
-      document.removeEventListener('keydown', handler);
-      document.removeEventListener('click',   handler);
-
-      AudioManager.init();
-      await Utils.switchScreen('screen-title', 'screen-intro');
-      _startIntro();
+      if (!audioStarted) {
+        AudioManager.init();
+        AudioManager.playLoop('assets/sounds/title_vhs.mp3', 0.35);
+        audioStarted = true;
+      }
+      // show menu on first non-modifier input
+      showTitleMenu();
     };
 
     document.addEventListener('keydown', handler);
@@ -77,11 +188,15 @@ const Game = (() => {
   // GAME START
   // ═══════════════════════════════════════════
   const _startGame = async () => {
-    AudioManager.startAmbience();
     await Utils.switchScreen('screen-intro', 'screen-game');
+    _beginGameplay();
+  };
+
+  const _beginGameplay = async () => {
+    AudioManager.startAmbience();
 
     state.phase          = 'playing';
-    state.applicantQueue = ApplicantSystem.buildQueue(QUEUE_SIZE);
+    state.applicantQueue = ApplicantSystem.buildQueue(getQueueSize());
 
     // Init room system with escape callback
     RoomSystem.init(() => {
@@ -91,7 +206,7 @@ const Game = (() => {
     });
     RoomSystem.initRain();
     RoomSystem.scheduleLightning(0);
-    RoomSystem.setState('clean');
+    RoomSystem.setState('clean', true); // instant — no 3s fade on first load
 
     Effects.init();
     _renderHearts();
@@ -99,7 +214,7 @@ const Game = (() => {
 
     DialogueSystem.showSystemMessage(DIALOGUE_DATA.system.welcome, 'sys');
     DialogueSystem.showSystemMessage(
-      `Pelamar terdaftar malam ini: ${QUEUE_SIZE}`, 'sys'
+      `Pelamar terdaftar malam ini: ${state.applicantQueue.length}`, 'sys'
     );
 
     AudioManager.play('bell');
@@ -125,13 +240,27 @@ const Game = (() => {
     }
 
     // Final office event — triggers before the last applicant
-    if (state.currentIndex === FINAL_OFFICE_EVENT_AT && !state.finalOfficeEventDone) {
+    if (state.currentIndex === getFinalOfficeEventAt() && !state.finalOfficeEventDone) {
       state.finalOfficeEventDone = true;
       await Effects.triggerFinalOfficeEvent();
       await Utils.sleep(600);
     }
 
-    const applicant = state.applicantQueue[state.currentIndex];
+    let applicant = state.applicantQueue[state.currentIndex];
+
+    const shouldSpawnSecretDimbud =
+      !state.dimbudSpawned &&
+      state.currentIndex === 4 &&
+      state.hearts === state.maxHearts &&
+      state.anomaliesHired === 0 &&
+      !state.ended;
+
+    if (shouldSpawnSecretDimbud) {
+      applicant = Utils.clone(SECRET_APPLICANT_DIMBUD);
+      state.applicantQueue[state.currentIndex] = applicant;
+      state.dimbudSpawned = true;
+    }
+
     state.questionsAsked.clear();
 
     await Utils.sleep(700);
@@ -149,6 +278,19 @@ const Game = (() => {
     // Load into scene
     ApplicantSystem.loadApplicant(applicant);
     Polish.animateCVIn();
+
+    // Auto-save minimal state so Continue can resume
+    try {
+      if (window.SaveSystem && SaveSystem.saveGame) {
+        SaveSystem.saveGame({
+          hearts: state.hearts,
+          applicantIndex: state.currentIndex + 1,
+          shift: state.currentIndex + 1,
+          applicantQueue: state.applicantQueue,
+          difficulty: state.difficulty
+        });
+      }
+    } catch (e) { /* ignore save errors */ }
 
     // SFX: chair creak as applicant sits, paper slide for CV
     setTimeout(() => AudioManager.play('chairCreak'), 600);
@@ -247,7 +389,6 @@ const Game = (() => {
     Utils.el('btn-reject').disabled = true;
 
     ApplicantSystem.stampCV(decision);
-    AudioManager.play('stamp');
 
     const result = AnomalySystem.evaluate(applicant, decision);
     AudioManager.play(decision === 'hire' ? 'hire' : 'reject');
@@ -269,6 +410,13 @@ const Game = (() => {
     }
 
     _updateHUD();
+
+    if (decision === 'hire' && applicant.secretEnding === 'ENDING_VTUBER') {
+      ApplicantSystem.removeApplicant();
+      Utils.hide('action-panel');
+      await _triggerEnding(applicant.secretEnding);
+      return;
+    }
 
     if (state.hearts <= 0) {
       await Utils.sleep(600);
@@ -401,6 +549,8 @@ const Game = (() => {
   const boot = async () => {
     // Phase 5: preload assets first
     await Polish.preload();
+    await IntroSystem.preload();
+    IntroSystem.init();
 
     init();
     _bindDecisions();

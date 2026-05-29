@@ -8,14 +8,19 @@ const EndingSystem = (() => {
 
   const trigger = async (type, stats) => {
     AudioManager.stopAll();
+    // Persist unlocked ending
+    if (window.SaveSystem && typeof SaveSystem.unlockEnding === 'function') {
+      try { SaveSystem.unlockEnding(type); } catch (e) { /* ignore */ }
+    }
 
     // Route to correct sequence
     switch (type) {
-      case 'bad':    await _badEnding(stats);    break;
-      case 'good':   await _goodEnding(stats);   break;
-      case 'secret': await _secretEnding(stats); break;
-      case 'escape': await _escapeEnding(stats); break;
-      default:       await _goodEnding(stats);
+      case 'bad':          await _badEnding(stats);    break;
+      case 'good':         await _goodEnding(stats);   break;
+      case 'secret':       await _secretEnding(stats); break;
+      case 'escape':       await _escapeEnding(stats); break;
+      case 'ENDING_VTUBER': await _vtuberEnding(stats); break;
+      default:            await _goodEnding(stats);
     }
   };
 
@@ -68,6 +73,39 @@ const EndingSystem = (() => {
       titleGlow: 'rgba(200,134,10,0.4)',
       showStats: true,
     });
+  };
+
+  // ══════════════════════════════════════════
+  // VTUBER EASTER EGG ENDING
+  // ══════════════════════════════════════════
+  const _vtuberEnding = async (stats) => {
+    await Utils.sleep(200);
+    AudioManager.play('static');
+    Utils.flashScreen('black', 500);
+    await Utils.sleep(600);
+
+    await Utils.switchScreen('screen-game', 'screen-ending', 700);
+    const ending = document.getElementById('screen-ending');
+    if (ending) {
+      ending.style.background = 'linear-gradient(180deg, #120a08 0%, #080506 100%)';
+      ending.style.display = 'flex';
+      ending.style.opacity = '0';
+      requestAnimationFrame(() => {
+        ending.style.transition = 'opacity 1.5s ease';
+        ending.style.opacity = '1';
+        ending.classList.add('active');
+      });
+    }
+
+    _buildEndingScreen('ENDING_VTUBER', DIALOGUE_DATA.endings.ENDING_VTUBER, stats, {
+      bgColor: 'transparent',
+      titleGlow: 'rgba(255,180,80,0.35)',
+      showStats: false,
+    });
+
+    setTimeout(() => {
+      if (AudioManager && AudioManager.play) AudioManager.play('bell');
+    }, 1400);
   };
 
   // ══════════════════════════════════════════
@@ -183,7 +221,7 @@ const EndingSystem = (() => {
     emailWrap.className = 'secret-email-wrap';
     emailWrap.innerHTML = `
       <div class="secret-email-header">
-        <span>DARI: pak.direktur@nusantarajaya.co.id</span>
+        <span>DARI: pak.direktur@dimbudmencaricintasejatitbk.co.id</span>
         <span>SUBJEK: Penilaian Shift Malam — RAHASIA</span>
       </div>
       <div class="secret-email-body" id="secret-email-body"></div>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 72" width="60" height="72">
+  <rect width="60" height="72" fill="#c8b898" rx="1"/>
+  <text x="30" y="40" font-size="28" text-anchor="middle" dominant-baseline="middle">👤</text>
+  <rect width="60" height="72" fill="none" stroke="#a09878" stroke-width="1" rx="1"/>
+</svg>

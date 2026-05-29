@@ -11,16 +11,9 @@ const Polish = (() => {
   // ══════════════════════════════════════════
   const preload = () => {
     return new Promise((resolve) => {
-      const images = [
-        'assets/backgrounds/office_clean.png',
-        'assets/backgrounds/office_uneasy.png',
-        'assets/backgrounds/office_corrupted.png',
-        'assets/backgrounds/office_horror.png',
-      ];
-
-      const bar      = document.getElementById('loading-bar');
-      const text     = document.getElementById('loading-text');
-      const overlay  = document.getElementById('loading-overlay');
+      const bar     = document.getElementById('loading-bar');
+      const text    = document.getElementById('loading-text');
+      const overlay = document.getElementById('loading-overlay');
 
       const steps = [
         'Memuat sistem...',
@@ -30,48 +23,26 @@ const Polish = (() => {
         'Siap.',
       ];
 
-      let loaded = 0;
-      const total = images.length + steps.length;
-
-      const tick = (msg) => {
-        loaded++;
-        const pct = Math.round((loaded / total) * 100);
-        if (bar)  bar.style.width = pct + '%';
-        if (text) text.textContent = msg;
-      };
-
-      // Step through text messages with delay
+      // Animate loading bar through steps
       let stepIdx = 0;
       const stepInterval = setInterval(() => {
         if (stepIdx < steps.length) {
-          tick(steps[stepIdx++]);
+          const pct = Math.round(((stepIdx + 1) / steps.length) * 100);
+          if (bar)  bar.style.width = pct + '%';
+          if (text) text.textContent = steps[stepIdx];
+          stepIdx++;
         } else {
           clearInterval(stepInterval);
+          // Done — hide loader
+          _hideLoader(overlay, resolve);
         }
-      }, 220);
+      }, 300);
 
-      // Load images
-      let imgLoaded = 0;
-      images.forEach(src => {
-        const img = new Image();
-        img.onload = img.onerror = () => {
-          imgLoaded++;
-          tick('Memuat aset ' + imgLoaded + '/' + images.length + '...');
-          if (imgLoaded === images.length) {
-            // All done — wait for steps to finish too
-            setTimeout(() => {
-              _hideLoader(overlay, resolve);
-            }, 600);
-          }
-        };
-        img.src = src;
-      });
-
-      // Safety fallback: if images load instantly or fail fast
+      // Hard fallback — never stuck longer than 2s
       setTimeout(() => {
         clearInterval(stepInterval);
         _hideLoader(overlay, resolve);
-      }, 3500);
+      }, 2000);
     });
   };
 
@@ -133,31 +104,28 @@ const Polish = (() => {
   // CV SLIDE-IN ANIMATION
   // ══════════════════════════════════════════
   const animateCVIn = () => {
-    const cv = document.getElementById('cv-panel');
+    AudioManager.play('paperSlide');
+  };
+
+  const _openCV = () => {
+    const cv = Utils.el('cv-panel');
     if (!cv) return;
-    cv.style.transition = 'none';
-    cv.style.transform  = 'rotate(-1deg) translateX(-120%)';
-    cv.style.opacity    = '0';
+    cv.classList.remove('hidden');
+  };
 
-    requestAnimationFrame(() => {
-      cv.style.transition = 'transform 0.45s cubic-bezier(0.22,1,0.36,1), opacity 0.3s ease';
-      cv.style.transform  = 'rotate(-1deg) translateX(0)';
-      cv.style.opacity    = '1';
-    });
+  const _closeCV = () => {
+    const cv = Utils.el('cv-panel');
+    if (!cv) return;
+    cv.classList.add('hidden');
+  };
 
-    AudioManager.play('paperRustle');
+  window.CVController = {
+    open: _openCV,
+    close: _closeCV,
   };
 
   const animateCVOut = () => {
-    const cv = document.getElementById('cv-panel');
-    if (!cv) return;
-    cv.style.transition = 'transform 0.3s ease, opacity 0.25s ease';
-    cv.style.transform  = 'rotate(-2deg) translateX(-110%)';
-    cv.style.opacity    = '0';
-    setTimeout(() => {
-      cv.style.transition = 'none';
-      cv.style.transform  = 'rotate(-1deg)';
-    }, 350);
+    _closeCV();
   };
 
   // ══════════════════════════════════════════

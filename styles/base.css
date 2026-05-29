@@ -95,11 +95,9 @@ button {
   flex-direction: column;
 }
 
-/* Game screen: column layout, no centering */
+/* Game screen: block layout, all children absolute */
 #screen-game.active {
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
+  display: block;
 }
 
 .screen.fade-out {
@@ -132,7 +130,7 @@ button {
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .title-noise {
@@ -304,7 +302,7 @@ button {
 
 /* ── Ending Screen ── */
 #screen-ending {
-  background: #000;
+  background: radial-gradient(circle at top, rgba(255,170,10,0.06), rgba(10,10,10,0.95) 55%);
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -314,7 +312,14 @@ button {
 .ending-content {
   text-align: center;
   font-family: var(--font-display);
-  max-width: 600px;
+  max-width: 720px;
+  width: min(92vw, 720px);
+  padding: 34px 28px;
+  border: 1px solid rgba(255, 180, 20, 0.12);
+  background: rgba(6, 6, 6, 0.92);
+  box-shadow: 0 0 80px rgba(255, 170, 20, 0.08), inset 0 0 28px rgba(255, 170, 20, 0.06);
+  border-radius: 16px;
+  backdrop-filter: blur(4px);
 }
 
 /* ── Horror Overlay ── */
@@ -554,6 +559,28 @@ button {
 
 #hud-fullscreen {
   margin-left: auto;
+}
+
+#hud-back {
+  margin-left: 8px;
+}
+
+#btn-back-title {
+  background: transparent;
+  border: 1px solid #2a2218;
+  color: var(--col-gray);
+  font-size: 12px;
+  padding: 6px 8px;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.15s ease;
+}
+
+#btn-back-title:hover {
+  border-color: var(--col-amber-dim);
+  color: var(--col-amber);
+  background: rgba(200,134,10,0.04);
 }
 
 #btn-fullscreen {

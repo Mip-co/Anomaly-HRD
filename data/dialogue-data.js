@@ -72,27 +72,27 @@ const DIALOGUE_DATA = {
   horrorEvents: [
     {
       text:     'LAMPU MATI SEJENAK',
-      image:    '💡',
+      image:    'assets\characters\jumpscares\Jumpscare6.png',
       duration: 1400,
-      sound:    'flicker',
+      sound:    'jumpscare',
     },
     {
       text:     'SESUATU BERGERAK DI LUAR JENDELA',
-      image:    '👁️',
+      image:    'assets\characters\jumpscares\Jumpscare2.png',
       duration: 2000,
       sound:    'creak',
     },
     {
       text:     'LAYAR BERUBAH SEBENTAR',
-      image:    '📺',
+      image:    'assets\characters\jumpscares\Jumpscare7.png',
       duration: 1600,
-      sound:    'static',
+      sound:    'jumpscare',
     },
     {
       text:     'ADA SUARA DARI KOLONG MEJA',
-      image:    '🙉',
+      image:    'assets/characters/jumpscares/Jumpscare4.png',
       duration: 1800,
-      sound:    'creak',
+      sound:    'jumpscare',
     },
     {
       text:     '',
@@ -108,15 +108,15 @@ const DIALOGUE_DATA = {
     },
     {
       text:     'DATA HILANG SEBENTAR',
-      image:    '📁',
+      image:    'assets\characters\jumpscares\Jumpscare1.png',
       duration: 1200,
       sound:    'static',
     },
     {
       text:     '',
-      image:    '🌑',
+      image:    'assets/characters/jumpscares/Jumpscare6.png',
       duration: 2500,
-      sound:    'heartLoss',
+      sound:    'jumpscare',
     },
   ],
 
@@ -153,9 +153,29 @@ const DIALOGUE_DATA = {
         '',
         'Di meja ada satu amplop yang tidak ada sebelumnya.',
         'Di dalamnya: CV dengan foto dan nama Anda.',
-        'Tanggal pengajuan: malam ini.',
         '',
-        '...Anda tidak pernah melamar ke sini.',
+        'Di bagian status tertulis:',
+        '"MENUNGGU PROSES WAWANCARA"',
+        '',
+        '...Anda belum pernah diterima bekerja di sini.',
+      ]
+    },
+    ENDING_VTUBER: {
+      title: 'VTUBER ENDING',
+      lines: [
+        'Office lights shut down.',
+        'EMPLOYEE STATUS: RESIGNED',
+        'Rain ambience slowly fades.',
+        'CRT distortion weakens.',
+        'Beberapa minggu kemudian...',
+        'Kamu tidak pernah kembali ke gedung itu.',
+        'Sekarang kamu menjadi VTuber indie kecil.',
+        'Penontonmu tidak banyak.',
+        'Tapi setidaknya...',
+        'Kamu akhirnya keluar dari kota aneh itu.',
+        'NEW CAREER PATH DETECTED:',
+        'STREAMER',
+        'Ting.',
       ]
     },
     escape: {

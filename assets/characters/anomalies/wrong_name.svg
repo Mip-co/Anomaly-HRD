@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 200" width="120" height="200">
+  <!-- Looks completely normal — the anomaly is in the name only -->
+  <rect x="28" y="108" width="64" height="92" rx="4" fill="#2a1a0a"/>
+  <rect x="50" y="88" width="20" height="24" fill="#d4a868"/>
+  <ellipse cx="60" cy="68" rx="28" ry="32" fill="#d4a868"/>
+  <ellipse cx="60" cy="40" rx="28" ry="13" fill="#4a2a08"/>
+  <rect x="32" y="40" width="56" height="20" fill="#4a2a08"/>
+  <ellipse cx="47" cy="67" rx="7" ry="7" fill="#fff"/>
+  <ellipse cx="73" cy="67" rx="7" ry="7" fill="#fff"/>
+  <ellipse cx="47" cy="68" rx="4.5" ry="4.5" fill="#2a1808"/>
+  <ellipse cx="73" cy="68" rx="4.5" ry="4.5" fill="#2a1808"/>
+  <ellipse cx="48" cy="66" rx="1.5" ry="1.5" fill="#fff"/>
+  <ellipse cx="74" cy="66" rx="1.5" ry="1.5" fill="#fff"/>
+  <rect x="40" y="57" width="15" height="3" rx="1.5" fill="#3a1808"/>
+  <rect x="65" y="57" width="15" height="3" rx="1.5" fill="#3a1808"/>
+  <ellipse cx="60" cy="77" rx="3" ry="2" fill="#b88848"/>
+  <path d="M50 86 Q60 91 70 86" stroke="#906040" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Subtle tell: slight smirk -->
+  <path d="M68 87 Q71 84 73 86" stroke="#906040" stroke-width="1.5" fill="none"/>
+  <ellipse cx="32" cy="68" rx="5" ry="8" fill="#d4a868"/>
+  <ellipse cx="88" cy="68" rx="5" ry="8" fill="#d4a868"/>
+</svg>

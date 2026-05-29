@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 200" width="120" height="200">
+  <!-- Body -->
+  <rect x="30" y="110" width="60" height="90" rx="4" fill="#2a2828"/>
+  <!-- Collar / tie -->
+  <polygon points="55,110 65,110 62,140 60,135 58,140" fill="#1a1a2a"/>
+  <rect x="58" y="135" width="4" height="30" fill="#1a1a2a"/>
+  <!-- Neck -->
+  <rect x="52" y="90" width="16" height="24" fill="#c8a878"/>
+  <!-- Head -->
+  <ellipse cx="60" cy="72" rx="28" ry="32" fill="#c8a878"/>
+  <!-- Hair -->
+  <ellipse cx="60" cy="44" rx="28" ry="14" fill="#3a2a1a"/>
+  <rect x="32" y="44" width="56" height="16" fill="#3a2a1a"/>
+  <!-- Eyes -->
+  <ellipse cx="48" cy="68" rx="6" ry="7" fill="#fff"/>
+  <ellipse cx="72" cy="68" rx="6" ry="7" fill="#fff"/>
+  <ellipse cx="48" cy="69" rx="4" ry="5" fill="#3a2a1a"/>
+  <ellipse cx="72" cy="69" rx="4" ry="5" fill="#3a2a1a"/>
+  <ellipse cx="49" cy="67" rx="1.5" ry="1.5" fill="#fff"/>
+  <ellipse cx="73" cy="67" rx="1.5" ry="1.5" fill="#fff"/>
+  <!-- Eyebrows -->
+  <rect x="41" y="58" width="14" height="3" rx="1.5" fill="#3a2a1a"/>
+  <rect x="65" y="58" width="14" height="3" rx="1.5" fill="#3a2a1a"/>
+  <!-- Nose -->
+  <ellipse cx="60" cy="78" rx="3" ry="2" fill="#b89060"/>
+  <!-- Mouth -->
+  <path d="M50 86 Q60 91 70 86" stroke="#8a6040" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Ears -->
+  <ellipse cx="32" cy="72" rx="5" ry="8" fill="#c8a878"/>
+  <ellipse cx="88" cy="72" rx="5" ry="8" fill="#c8a878"/>
+</svg>

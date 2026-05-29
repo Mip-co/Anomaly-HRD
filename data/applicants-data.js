@@ -9,7 +9,7 @@ const APPLICANT_POOLS = {
 
   // ── Nama depan ──
   firstName: {
-    male:   ['Budi','Reza','Hendra','Agus','Doni','Fajar','Irwan','Joko',
+    male:   ['Dimbud','Budi','Reza','Hendra','Agus','Doni','Fajar','Irwan','Joko',
               'Kevin','Lutfi','Marco','Nanda','Oscar','Pandu','Rizky',
               'Surya','Taufik','Umar','Vino','Wahyu','Yusuf','Zaki'],
     female: ['Siti','Dewi','Ayu','Bella','Clara','Diana','Eva','Fitri',
@@ -24,7 +24,7 @@ const APPLICANT_POOLS = {
              'Lestari','Purwanto','Yulianto','Mahendra','Adiputra','Basuki'],
 
   // ── Posisi yang dilamar ──
-  position: ['Staff Administrasi','Customer Service','Analis Keuangan',
+  position: ['Manager','Customer Service','Analis Keuangan',
              'Marketing Digital','Kepala Gudang','Staff IT','Data Entry',
              'Resepsionis','Staf HRD','Asisten Manajer','Operator Produksi',
              'Koordinator Logistik','Teknisi Komputer','Staff Akuntansi'],
@@ -116,4 +116,31 @@ const APPLICANT_POOLS = {
 };
 
 // ── Fixed applicants (masih ada untuk garanteed content di awal game) ──
+const SECRET_APPLICANT_DIMBUD = {
+  id: 'SECRET_DIMBUD',
+  name: 'Dimbud',
+  age: 24,
+  position: 'Talent Manager',
+  company: 'Black Company',
+  origin: 'Bekasi',
+  notes: 'Pernah tidak digaji.',
+  isAnomaly: false,
+  secretEnding: 'ENDING_VTUBER',
+  _gender: 'male',
+  education: 'S1 Manajemen, Universitas Fiktif (2023)',
+  experience: 'Pernah mengelola talenta online, event, dan kontrak sponsor.',
+  sprite: 'assets/characters/applicants/dimbud.png',
+  cvPhoto: 'assets/characters/applicants/dimbud.png',
+  appearance: 'assets/characters/applicants/dimbud.png',
+  _salary: 8,
+  cssClass: 'dimbud-applicant',
+  dialogues: {
+    greeting: 'Selamat malam. Posisi saya biasanya Talent Manager... walau sekarang lebih mirip pawang pokemon.',
+    pengalaman: 'Saya pernah kerja sampai stroke. pagi, siang, malam semua masuk.',
+    motivasi: 'Motivasi? Apa itu motivasi... mending jadi VTuber.',
+    diri: 'Saya terbiasa multitasking. Ngurus talent, sponsor, drama, sampe jadi tempat curhat.',
+    gaji: 'Ekspektasi gaji? Yang penting dibayar, ga kayak yang sebelumnya. WOI BEMMY HENDRIAS BAYAR UTANG LU!!.',
+  },
+};
+
 const APPLICANTS_DATA = [];  // Kosong — semua dari generator di Phase 3

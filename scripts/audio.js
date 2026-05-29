@@ -13,6 +13,7 @@ const AudioManager = (() => {
   let tensionGain = null;
   let initialized = false;
   let tensionLevel = 0;
+  let loopAudio = null;
 
   // Active nodes
   let nodes = {
@@ -339,16 +340,17 @@ const AudioManager = (() => {
     },
 
     thunder: () => {
-      _static(0.9, 0.6);
-      _tone(38, 'sawtooth', 1.2, 0.35, 0.1);
-      _tone(30, 'sine',     1.5, 0.2,  0.3);
+      const audio = new Audio('assets/sounds/thunder.mp3');
+      audio.volume = 0.6;
+      audio.play();
     },
 
     jumpscare: () => {
-      _static(0.5, 1.0);
-      _tone(80,  'sawtooth', 0.7, 0.9);
-      _tone(120, 'square',   0.5, 0.6, 0.05);
-      _tone(55,  'sawtooth', 0.9, 0.7, 0.1);
+      _static(0.8, 1.0);
+      _tone(220, 'square', 0.35, 0.95);
+      _tone(320, 'sawtooth', 0.28, 0.85, 0.02);
+      _tone(420, 'square', 0.22, 0.65, 0.05);
+      _tone(520, 'sawtooth', 0.18, 0.5, 0.08);
     },
 
     type: () => {
@@ -356,6 +358,13 @@ const AudioManager = (() => {
     },
 
     paperRustle: () => _static(0.14, 0.18),
+
+    vhs: () => {
+      _static(0.85, 0.35);
+      _tone(620, 'sine', 0.16, 0.22);
+      _tone(980, 'square', 0.12, 0.16, 0.03);
+      _tone(450, 'triangle', 0.18, 0.12, 0.04);
+    },
 
     footstep: () => {
       _tone(65 + Math.random() * 35, 'sine', 0.12, 0.28);
@@ -459,7 +468,30 @@ const AudioManager = (() => {
     _startBuzz();
   };
 
+  const stopLoop = () => {
+    if (!loopAudio) return;
+    try {
+      loopAudio.pause();
+      loopAudio.currentTime = 0;
+    } catch (e) {}
+    loopAudio = null;
+  };
+
+  const playLoop = (src, volume = 0.4) => {
+    stopLoop();
+    try {
+      loopAudio = new Audio(src);
+      loopAudio.loop = true;
+      loopAudio.volume = volume;
+      loopAudio.play().catch(() => {});
+    } catch (e) {
+      console.warn('Loop audio failed:', e);
+      loopAudio = null;
+    }
+  };
+
   const stopAll = () => {
+    stopLoop();
     Object.values(nodes).forEach(n => {
       if (!n) return;
       try { if (n.src) n.src.stop(); } catch(e) {}
@@ -469,7 +501,7 @@ const AudioManager = (() => {
     nodes = { rain: null, buzz: null, heartbeat: null, breathing: null, tension: null };
   };
 
-  return { init, play, startAmbience, stopAll, setTension };
+  return { init, play, playLoop, stopLoop, startAmbience, stopAll, setTension };
 
 })();
 

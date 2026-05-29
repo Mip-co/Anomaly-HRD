@@ -13,6 +13,15 @@
   <link rel="preload" as="image" href="assets/backgrounds/office_corrupted.png" />
   <link rel="preload" as="image" href="assets/backgrounds/office_horror.png" />
 
+  <!-- Preload intro cinematic scenes -->
+  <link rel="preload" as="image" href="assets/custscene/phk_office.png" />
+  <link rel="preload" as="image" href="assets/custscene/kos_room.png" />
+  <link rel="preload" as="image" href="assets/custscene/job_posting.png" />
+  <link rel="preload" as="image" href="assets/custscene/night_bus.png" />
+  <link rel="preload" as="image" href="assets/custscene/company_building.png" />
+  <link rel="preload" as="image" href="assets/custscene/director_email.png" />
+  <link rel="preload" as="image" href="assets/custscene/director_email.png" />
+
   <!-- Styles -->
   <link rel="stylesheet" href="styles/base.css" />
   <link rel="stylesheet" href="styles/office.css" />
@@ -29,13 +38,30 @@
     <div class="title-noise"></div>
     <div class="title-content">
       <div class="title-logo">
-        <p class="title-sub">PT. DIMBUD MENCARI CINTA SEJATI Tbk</p>
+        <p class="title-sub">PT. Dimbud Mencari Cinta Abadi</p>
         <h1 class="title-main">ANOMALY<br/><span>HRD</span></h1>
         <p class="title-tagline">— Night Shift Division —</p>
       </div>
       <div class="title-info">
-        <p class="blink-slow">[ PRESS ANY KEY TO BEGIN ]</p>
+        <p class="blink-slow" id="title-prompt">[ PRESS ANY KEY TO BEGIN ]</p>
+        <div id="title-menu" class="title-menu hidden">
+          <button id="btn-new-game" class="btn-primary title-btn">NEW GAME</button>
+          <button id="btn-continue" class="btn-primary title-btn hidden">CONTINUE</button>
+          <button id="btn-endings" class="btn-primary title-btn hidden">ENDINGS</button>
+        </div>
+
+        <div id="difficulty-panel" class="difficulty-panel hidden">
+          <div class="difficulty-card">
+            <div class="difficulty-heading">SELECT DIFFICULTY</div>
+            <div class="difficulty-buttons">
+              <button class="btn-secondary difficulty-btn" data-difficulty="normal">NORMAL</button>
+              <button class="btn-secondary difficulty-btn" data-difficulty="hard">HARD</button>
+            </div>
+            <div class="difficulty-note">NORMAL = 10 applicants · HARD = 20 applicants</div>
+          </div>
+        </div>
         <p class="title-warning">⚠ Contains flashing lights and disturbing content</p>
+        <p class="title-warning">Develop by AhmadYeager</p>
       </div>
     </div>
     <div class="crt-overlay"></div>
@@ -52,7 +78,7 @@
           <span id="intro-time">22:47</span>
         </div>
         <div class="monitor-email">
-          <div class="email-from">FROM: pak.direktur@nusantarajaya.co.id</div>
+          <div class="email-from">FROM: pak.direktur@dimbudmencaricintasejatitbk.co.id</div>
           <div class="email-subject">SUBJECT: Selamat Datang - Instruksi Shift Malam</div>
           <div class="email-body" id="email-body">
             <!-- Filled by dialogue.js -->
@@ -62,6 +88,23 @@
     </div>
     <button id="btn-start-shift" class="btn-primary hidden">[ MULAI SHIFT ]</button>
     <div class="crt-overlay"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN: CINEMATIC INTRO
+  ══════════════════════════════════════════ -->
+  <div id="screen-cinematic" class="screen">
+    <div class="cinematic-frame">
+      <div class="cinematic-image" id="intro-image"></div>
+      <div class="cinematic-bars top"></div>
+      <div class="cinematic-bars bottom"></div>
+      <div class="cinematic-caption" id="intro-caption">
+        <div id="intro-lines"></div>
+        <div class="intro-skip" id="intro-skip"></div>
+      </div>
+    </div>
+    <div class="crt-overlay"></div>
+    <div class="screen-flicker" id="cinematic-flicker"></div>
   </div>
 
   <!-- ══════════════════════════════════════════
@@ -116,11 +159,11 @@
 
     </div><!-- /office-background -->
 
-    <!-- Desk Surface -->
+    <!-- ── DESK SURFACE (bottom area) ── -->
     <div id="desk-surface">
 
       <!-- CV Document -->
-      <div id="cv-panel" class="desk-item hidden">
+      <div id="cv-panel">
         <div class="cv-header">
           <div class="cv-photo" id="cv-photo"></div>
           <div class="cv-identity">
@@ -147,12 +190,11 @@
         <div class="cv-stamp hidden" id="cv-stamp"></div>
       </div>
 
-      <!-- Laptop / Monitor -->
-      <div id="laptop-panel" class="desk-item">
+      <div id="laptop-panel">
         <div class="laptop-screen">
           <div class="laptop-header">
             <span>HRD SYSTEM v2.1</span>
-            <span id="applicant-counter">Pelamar: 0 / 20</span>
+            <span id="applicant-counter">0 / 10</span>
           </div>
           <div class="laptop-content" id="laptop-content">
             <p class="system-idle">Sistem menunggu pelamar berikutnya...</p>
@@ -160,32 +202,20 @@
         </div>
       </div>
 
-      <!-- Coffee Mug -->
-      <div id="coffee-mug" class="desk-item">
-        <div class="mug-body">
-          <div class="mug-steam"></div>
-        </div>
-      </div>
-
-      <!-- Action Panel: Questions + Hire/Reject -->
+      <!-- Action Panel: Dialogue + Questions + Decisions -->
       <div id="action-panel" class="hidden">
 
-        <!-- Dialogue Box -->
         <div id="dialogue-box">
           <div class="dialogue-speaker" id="dialogue-speaker">Pelamar</div>
           <div class="dialogue-text" id="dialogue-text">...</div>
           <div class="dialogue-next blink-slow" id="dialogue-next">▼</div>
         </div>
 
-        <!-- Question Buttons -->
         <div id="question-panel" class="hidden">
           <p class="panel-label">Tanya Pelamar:</p>
-          <div id="question-buttons">
-            <!-- Generated by game.js -->
-          </div>
+          <div id="question-buttons"></div>
         </div>
 
-        <!-- Decision Buttons -->
         <div id="decision-panel" class="hidden">
           <p class="panel-label">Keputusan:</p>
           <div class="decision-buttons">
@@ -196,28 +226,32 @@
 
       </div>
 
-    </div>
+    </div><!-- /desk-surface -->
 
     <!-- HUD: Hearts + Status -->
     <div id="hud">
       <div id="hud-hearts">
         <span class="hud-label">NYAWA</span>
-        <div id="heart-display">
-          <!-- Hearts generated by game.js -->
-        </div>
+        <div id="heart-display"></div>
       </div>
       <div id="hud-status">
         <span class="hud-label">TARGET</span>
-        <span id="hud-target">0 / 20</span>
+        <span id="hud-target">0 / 10</span>
       </div>
       <div id="hud-shift">
         <span class="hud-label">SHIFT</span>
         <span id="hud-shift-time">22:00</span>
       </div>
+      <div id="hud-cv-hint" class="hidden">
+        <span class="hud-label">CV</span>
+        <span>[TAB]</span>
+      </div>
       <div id="hud-escape" class="hidden">
         <span class="hud-label hud-escape-hint">[ESC] pergi</span>
       </div>
-      <!-- Fullscreen button -->
+      <div id="hud-back">
+        <button id="btn-back-title">BACK</button>
+      </div>
       <div id="hud-fullscreen" title="Fullscreen [F]">
         <button id="btn-fullscreen">⛶</button>
       </div>
@@ -270,6 +304,7 @@
   <script src="data/applicants-data.js"></script>
   <script src="data/anomalies-data.js"></script>
   <script src="data/dialogue-data.js"></script>
+  <script src="data/assets-data.js"></script>
   <script src="scripts/utils.js"></script>
   <script src="scripts/audio.js"></script>
   <script src="scripts/room.js"></script>
@@ -279,7 +314,9 @@
   <script src="scripts/generator.js"></script>
   <script src="scripts/applicants.js"></script>
   <script src="scripts/anomalies.js"></script>
+  <script src="scripts/save-system.js"></script>
   <script src="scripts/endings.js"></script>
+  <script src="scripts/intro.js"></script>
   <script src="scripts/game.js"></script>
 
 </body>

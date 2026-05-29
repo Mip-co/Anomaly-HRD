@@ -41,10 +41,13 @@ const RoomSystem = (() => {
 
       if (instant) {
         el.style.transition = 'none';
-        el.classList.toggle('active', s === newState);
-        // Force reflow then re-enable transition
-        el.getBoundingClientRect();
-        requestAnimationFrame(() => { el.style.transition = ''; });
+        el.style.opacity    = s === newState ? '1' : '0';
+        if (s === newState) el.classList.add('active');
+        else                el.classList.remove('active');
+        requestAnimationFrame(() => {
+          el.style.transition = '';
+          el.style.opacity    = '';
+        });
       } else {
         el.classList.toggle('active', s === newState);
       }
@@ -55,7 +58,6 @@ const RoomSystem = (() => {
     overlays.forEach(id => {
       const el = _el(id);
       if (!el) return;
-      // Remove all state classes
       el.classList.remove('state-uneasy', 'state-corrupted', 'state-horror');
       if (newState !== 'clean') el.classList.add(`state-${newState}`);
     });

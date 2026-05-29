@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 200" width="120" height="200">
+  <rect x="28" y="108" width="64" height="92" rx="4" fill="#2a1a1a"/>
+  <rect x="50" y="88" width="20" height="24" fill="#d4c4a8"/>
+  <!-- Head with wrong proportions -->
+  <ellipse cx="60" cy="65" rx="35" ry="38" fill="#d4c4a8"/>
+  <!-- No hair -->
+  <!-- Eyes too wide apart, different sizes -->
+  <ellipse cx="38" cy="60" rx="10" ry="9" fill="#fff"/>
+  <ellipse cx="82" cy="64" rx="7" ry="10" fill="#fff"/>
+  <ellipse cx="38" cy="61" rx="7" ry="6" fill="#0a0a0a"/>
+  <ellipse cx="82" cy="65" rx="5" ry="7" fill="#0a0a0a"/>
+  <!-- No pupils reflection = unsettling -->
+  <!-- Misaligned nose -->
+  <ellipse cx="63" cy="76" rx="3" ry="2.5" fill="#b8a888"/>
+  <!-- Wrong mouth — too wide, corners turned -->
+  <path d="M38 90 Q60 82 82 90" stroke="#8a6868" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M38 90 Q36 94 38 97" stroke="#8a6868" stroke-width="2" fill="none"/>
+  <path d="M82 90 Q84 94 82 97" stroke="#8a6868" stroke-width="2" fill="none"/>
+  <!-- Subtle texture lines -->
+  <line x1="32" y1="50" x2="88" y2="48" stroke="#c0b098" stroke-width="0.5" opacity="0.4"/>
+  <line x1="35" y1="55" x2="85" y2="56" stroke="#c0b098" stroke-width="0.5" opacity="0.3"/>
+  <ellipse cx="25" cy="65" rx="5" ry="9" fill="#d4c4a8"/>
+  <ellipse cx="95" cy="65" rx="5" ry="9" fill="#d4c4a8"/>
+</svg>

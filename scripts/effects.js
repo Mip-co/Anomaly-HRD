@@ -281,39 +281,46 @@ const Effects = (() => {
 
       AudioManager.play('jumpscare');
       Utils.flashScreen('white', 80);
-
       await Utils.sleep(80);
 
-      const jumpscares = {
-        standard: { emoji: '👁️',  text: '' },
-        face:     { emoji: '😱',  text: 'DIA TAHU' },
-        shadow:   { emoji: '🌑',  text: 'ADA SESEORANG DI BELAKANG ANDA' },
-        static:   { emoji: '📺',  text: '' },
+      // Map type to asset
+      const assetMap = {
+        standard: ASSETS.jumpscares.face,
+        face:     ASSETS.jumpscares.face,
+        shadow:   ASSETS.jumpscares.shadow,
+        static:   ASSETS.jumpscares.static,
+        eye:      ASSETS.jumpscares.eye,
       };
 
-      const data = jumpscares[type] || jumpscares.standard;
-      img.textContent = data.emoji;
-      txt.textContent = data.text;
-      txt.style.fontSize = type === 'face' ? '28px' : '36px';
+      const textMap = {
+        face:   'DIA TAHU',
+        shadow: '',
+        static: '',
+        eye:    '',
+      };
+
+      // Set image
+      img.innerHTML = '';
+      const jsImg = document.createElement('img');
+      jsImg.src       = assetMap[type] || ASSETS.jumpscares.face;
+      jsImg.className = 'jumpscare-img';
+      jsImg.draggable = false;
+      img.appendChild(jsImg);
+
+      txt.textContent = textMap[type] || '';
 
       overlay.classList.remove('hidden');
-      overlay.style.animation = 'none';
-      overlay.offsetHeight; // reflow
-      overlay.style.animation = '';
 
-      // Chromatic aberration on body
       document.body.style.filter = 'hue-rotate(180deg) contrast(2)';
       setTimeout(() => {
         document.body.style.filter = 'hue-rotate(90deg) contrast(1.5)';
-        setTimeout(() => {
-          document.body.style.filter = '';
-        }, 100);
+        setTimeout(() => { document.body.style.filter = ''; }, 100);
       }, 100);
 
       await Utils.sleep(600 + tensionLevel * 80);
 
       overlay.classList.add('hidden');
-      img.textContent = '';
+      img.innerHTML   = '';
       txt.textContent = '';
       resolve();
     });
@@ -338,8 +345,18 @@ const Effects = (() => {
         return;
       }
 
-      img.textContent = event.image || '👁️';
-      txt.textContent = event.text  || '';
+      img.innerHTML = '';
+      const isImagePath = typeof event.image === 'string' && /\.(png|jpe?g|gif|svg)(\?.*)?$/i.test(event.image.trim());
+      if (isImagePath) {
+        const art = document.createElement('img');
+        art.src = event.image;
+        art.className = 'horror-image-img';
+        art.draggable = false;
+        img.appendChild(art);
+      } else {
+        img.textContent = event.image || '👁️';
+      }
+      txt.textContent = event.text || '';
 
       AudioManager.play(event.sound || 'static');
       Utils.flashScreen('white', 150);

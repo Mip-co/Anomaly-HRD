@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <rect width="400" height="300" fill="#000"/>
+  <!-- Single giant eye -->
+  <ellipse cx="200" cy="150" rx="180" ry="110" fill="#0a0808"/>
+  <ellipse cx="200" cy="150" rx="175" ry="105" fill="#f0e8d8"/>
+  <!-- Veins -->
+  <line x1="30"  y1="140" x2="120" y2="150" stroke="#cc2222" stroke-width="2" opacity="0.5"/>
+  <line x1="25"  y1="155" x2="115" y2="152" stroke="#cc2222" stroke-width="1.5" opacity="0.4"/>
+  <line x1="40"  y1="170" x2="125" y2="156" stroke="#cc2222" stroke-width="1" opacity="0.35"/>
+  <line x1="370" y1="138" x2="280" y2="150" stroke="#cc2222" stroke-width="2" opacity="0.5"/>
+  <line x1="375" y1="155" x2="285" y2="152" stroke="#cc2222" stroke-width="1.5" opacity="0.4"/>
+  <line x1="360" y1="172" x2="275" y2="157" stroke="#cc2222" stroke-width="1" opacity="0.35"/>
+  <!-- Iris -->
+  <ellipse cx="200" cy="150" rx="90" ry="90" fill="#2a1800"/>
+  <ellipse cx="200" cy="150" rx="85" ry="85" fill="#3a2408"/>
+  <!-- Iris detail rings -->
+  <ellipse cx="200" cy="150" rx="80" ry="80" fill="none" stroke="#4a3010" stroke-width="3" opacity="0.6"/>
+  <ellipse cx="200" cy="150" rx="70" ry="70" fill="none" stroke="#5a3c18" stroke-width="2" opacity="0.5"/>
+  <ellipse cx="200" cy="150" rx="60" ry="60" fill="none" stroke="#4a3010" stroke-width="2" opacity="0.4"/>
+  <!-- Pupil -->
+  <ellipse cx="200" cy="150" rx="45" ry="45" fill="#050202"/>
+  <!-- Reflection — off center, wrong -->
+  <ellipse cx="178" cy="128" rx="14" ry="14" fill="#fff" opacity="0.12"/>
+  <ellipse cx="180" cy="130" rx="8"  ry="8"  fill="#fff" opacity="0.08"/>
+  <!-- Eyelid top -->
+  <path d="M20 150 Q200 30 380 150" fill="#0a0808" stroke="none"/>
+  <!-- Eyelid bottom -->
+  <path d="M20 150 Q200 250 380 150" fill="#0a0808" stroke="none"/>
+  <!-- Lashes top -->
+  <path d="M20 150 Q200 35 380 150" fill="none" stroke="#000" stroke-width="4"/>
+  <radialGradient id="vige" cx="50%" cy="50%" r="55%">
+    <stop offset="40%" stop-color="transparent"/>
+    <stop offset="100%" stop-color="#000" stop-opacity="1"/>
+  </radialGradient>
+  <rect width="400" height="300" fill="url(#vige)"/>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 200" width="120" height="200">
+  <rect x="28" y="108" width="64" height="92" rx="4" fill="#1a2a3a"/>
+  <rect x="58" y="88" width="4" height="24" fill="#c8a878"/>
+  <rect x="50" y="88" width="20" height="24" fill="#c8a878"/>
+  <ellipse cx="60" cy="70" rx="30" ry="34" fill="#b89060"/>
+  <!-- Short hair -->
+  <ellipse cx="60" cy="40" rx="30" ry="12" fill="#1a1208"/>
+  <rect x="30" y="40" width="60" height="18" fill="#1a1208"/>
+  <rect x="30" y="40" width="8" height="36" fill="#1a1208"/>
+  <rect x="82" y="40" width="8" height="36" fill="#1a1208"/>
+  <!-- Eyes narrower -->
+  <ellipse cx="47" cy="66" rx="7" ry="6" fill="#fff"/>
+  <ellipse cx="73" cy="66" rx="7" ry="6" fill="#fff"/>
+  <ellipse cx="47" cy="67" rx="4.5" ry="4" fill="#2a1a0a"/>
+  <ellipse cx="73" cy="67" rx="4.5" ry="4" fill="#2a1a0a"/>
+  <ellipse cx="48" cy="65" rx="1.5" ry="1.5" fill="#fff"/>
+  <ellipse cx="74" cy="65" rx="1.5" ry="1.5" fill="#fff"/>
+  <!-- Eyebrows thick -->
+  <rect x="39" y="57" width="16" height="4" rx="2" fill="#1a1208"/>
+  <rect x="65" y="57" width="16" height="4" rx="2" fill="#1a1208"/>
+  <!-- Stubble -->
+  <ellipse cx="60" cy="88" rx="18" ry="6" fill="#b89060" opacity="0.3"/>
+  <ellipse cx="50" cy="82" rx="5" ry="3" fill="#8a6030" opacity="0.2"/>
+  <ellipse cx="70" cy="82" rx="5" ry="3" fill="#8a6030" opacity="0.2"/>
+  <ellipse cx="60" cy="78" rx="3" ry="2" fill="#a08050"/>
+  <path d="M49 86 Q60 90 71 86" stroke="#8a6040" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="30" cy="70" rx="5" ry="8" fill="#b89060"/>
+  <ellipse cx="90" cy="70" rx="5" ry="8" fill="#b89060"/>
+</svg>

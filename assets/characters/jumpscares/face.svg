@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <!-- Dark background -->
+  <rect width="400" height="300" fill="#000"/>
+  <!-- Face — distorted, too close -->
+  <ellipse cx="200" cy="150" rx="160" ry="140" fill="#1a1510"/>
+  <!-- Eyes — massive, bloodshot -->
+  <ellipse cx="140" cy="130" rx="50" ry="48" fill="#fff"/>
+  <ellipse cx="260" cy="130" rx="50" ry="48" fill="#fff"/>
+  <!-- Veins in eyes -->
+  <line x1="100" y1="120" x2="130" y2="128" stroke="#cc2222" stroke-width="1.5" opacity="0.6"/>
+  <line x1="95"  y1="135" x2="128" y2="132" stroke="#cc2222" stroke-width="1"   opacity="0.5"/>
+  <line x1="180" y1="115" x2="160" y2="128" stroke="#cc2222" stroke-width="1.5" opacity="0.6"/>
+  <line x1="300" y1="120" x2="272" y2="128" stroke="#cc2222" stroke-width="1.5" opacity="0.6"/>
+  <line x1="308" y1="136" x2="274" y2="132" stroke="#cc2222" stroke-width="1"   opacity="0.5"/>
+  <line x1="222" y1="115" x2="244" y2="128" stroke="#cc2222" stroke-width="1.5" opacity="0.6"/>
+  <!-- Irises black with red ring -->
+  <ellipse cx="140" cy="130" rx="32" ry="32" fill="#cc1100" opacity="0.4"/>
+  <ellipse cx="260" cy="130" rx="32" ry="32" fill="#cc1100" opacity="0.4"/>
+  <ellipse cx="140" cy="130" rx="26" ry="26" fill="#0a0505"/>
+  <ellipse cx="260" cy="130" rx="26" ry="26" fill="#0a0505"/>
+  <!-- Tiny reflection -->
+  <ellipse cx="130" cy="118" rx="5" ry="5" fill="#ffffff" opacity="0.3"/>
+  <ellipse cx="250" cy="118" rx="5" ry="5" fill="#ffffff" opacity="0.3"/>
+  <!-- Nose — barely visible -->
+  <ellipse cx="200" cy="170" rx="8" ry="6" fill="#111008"/>
+  <!-- Mouth — open wide, teeth -->
+  <path d="M100 215 Q200 195 300 215 Q280 260 200 265 Q120 260 100 215Z" fill="#0a0505"/>
+  <rect x="130" y="215" width="140" height="20" fill="#e8e0d0" rx="3"/>
+  <line x1="150" y1="215" x2="150" y2="235" stroke="#888" stroke-width="2"/>
+  <line x1="170" y1="215" x2="170" y2="235" stroke="#888" stroke-width="2"/>
+  <line x1="190" y1="215" x2="190" y2="235" stroke="#888" stroke-width="2"/>
+  <line x1="210" y1="215" x2="210" y2="235" stroke="#888" stroke-width="2"/>
+  <line x1="230" y1="215" x2="230" y2="235" stroke="#888" stroke-width="2"/>
+  <line x1="250" y1="215" x2="250" y2="235" stroke="#888" stroke-width="2"/>
+  <!-- Bottom teeth -->
+  <rect x="140" y="245" width="120" height="16" fill="#d0c8b8" rx="2"/>
+  <!-- Outer darkness vignette -->
+  <radialGradient id="vig" cx="50%" cy="50%" r="50%">
+    <stop offset="50%" stop-color="transparent"/>
+    <stop offset="100%" stop-color="#000" stop-opacity="0.95"/>
+  </radialGradient>
+  <rect width="400" height="300" fill="url(#vig)"/>
+</svg>

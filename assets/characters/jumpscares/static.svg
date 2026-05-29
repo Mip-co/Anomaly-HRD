@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <rect width="400" height="300" fill="#030303"/>
+  <!-- Static noise bars -->
+  <rect x="0"   y="0"   width="400" height="8"  fill="#1a1a1a" opacity="0.9"/>
+  <rect x="0"   y="18"  width="400" height="4"  fill="#111"    opacity="0.7"/>
+  <rect x="0"   y="35"  width="400" height="12" fill="#222"    opacity="0.8"/>
+  <rect x="0"   y="60"  width="400" height="3"  fill="#1a1a1a" opacity="0.6"/>
+  <rect x="0"   y="80"  width="400" height="20" fill="#0f0f0f" opacity="0.9"/>
+  <rect x="0"   y="120" width="400" height="6"  fill="#1a1a1a" opacity="0.7"/>
+  <rect x="0"   y="145" width="400" height="15" fill="#222"    opacity="0.8"/>
+  <rect x="0"   y="180" width="400" height="4"  fill="#111"    opacity="0.6"/>
+  <rect x="0"   y="200" width="400" height="25" fill="#1a1a1a" opacity="0.9"/>
+  <rect x="0"   y="250" width="400" height="8"  fill="#222"    opacity="0.7"/>
+  <rect x="0"   y="275" width="400" height="15" fill="#1a1a1a" opacity="0.8"/>
+  <!-- Horizontal shift bands -->
+  <rect x="20"  y="35"  width="360" height="12" fill="#111" transform="translate(8,0)"  opacity="0.5"/>
+  <rect x="-10" y="80"  width="380" height="20" fill="#0a0a0a" transform="translate(-6,0)" opacity="0.5"/>
+  <rect x="15"  y="145" width="370" height="15" fill="#111" transform="translate(12,0)" opacity="0.5"/>
+  <!-- Ghost face barely visible in static -->
+  <ellipse cx="200" cy="150" rx="80" ry="90" fill="rgba(200,190,180,0.04)"/>
+  <ellipse cx="168" cy="130" rx="18" ry="18" fill="rgba(240,240,240,0.06)"/>
+  <ellipse cx="232" cy="130" rx="18" ry="18" fill="rgba(240,240,240,0.06)"/>
+  <path d="M165 175 Q200 168 235 175" stroke="rgba(200,190,180,0.08)" stroke-width="4" fill="none"/>
+  <!-- Noise filter -->
+  <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" stitchTiles="stitch"/></filter>
+  <rect width="400" height="300" fill="rgba(20,20,20,0.3)" filter="url(#n)"/>
+</svg>

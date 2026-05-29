@@ -29,13 +29,17 @@ const Utils = {
     return new Promise(resolve => {
       const from = Utils.el(fromId);
       const to   = Utils.el(toId);
+
+      // game screen uses block, others use flex
+      const displayType = (id) => id === 'screen-game' ? 'block' : 'flex';
+
       if (from) {
         from.classList.add('fade-out');
         setTimeout(() => {
           from.classList.remove('active', 'fade-out');
           from.style.display = 'none';
           if (to) {
-            to.style.display = 'flex';
+            to.style.display = displayType(toId);
             requestAnimationFrame(() => {
               to.classList.add('active');
               resolve();
@@ -43,7 +47,7 @@ const Utils = {
           }
         }, delay);
       } else if (to) {
-        to.style.display = 'flex';
+        to.style.display = displayType(toId);
         requestAnimationFrame(() => {
           to.classList.add('active');
           resolve();
@@ -56,37 +60,42 @@ const Utils = {
   typewrite: (element, text, speed = 35, callback) => {
     element.textContent = '';
     let i = 0;
-    let timeoutId = null;
+    let timerId = null;
+    let cancelled = false;
     const cursor = document.createElement('span');
     cursor.className = 'typewriter-cursor';
     element.appendChild(cursor);
 
+    const finish = () => {
+      if (cancelled) return;
+      cursor.remove();
+      if (callback) callback();
+    };
+
     const tick = () => {
-      if (i < text.length && !element._skipTypewrite) {
+      if (cancelled) return;
+      if (i < text.length) {
         element.insertBefore(document.createTextNode(text[i]), cursor);
         i++;
-        timeoutId = setTimeout(tick, speed + (Math.random() * 20 - 10));
-      } else if (element._skipTypewrite || i >= text.length) {
-        // Skip: show remaining text
-        if (element._skipTypewrite) {
-          while (i < text.length) {
-            element.insertBefore(document.createTextNode(text[i]), cursor);
-            i++;
-          }
-          element._skipTypewrite = false;
-        }
-        cursor.remove();
-        if (timeoutId) clearTimeout(timeoutId);
-        if (callback) callback();
+        timerId = setTimeout(tick, speed + (Math.random() * 20 - 10));
+      } else {
+        finish();
       }
     };
+
     tick();
+
+    return () => {
+      if (cancelled) return;
+      cancelled = true;
+      if (timerId) clearTimeout(timerId);
+      if (cursor.parentElement) cursor.remove();
+    };
   },
 
   // ── Type lines sequentially ──
   typeLines: (element, lines, speed = 30, lineDelay = 400, callback) => {
     let lineIdx = 0;
-    let currentTimeout = null;
 
     const nextLine = () => {
       if (lineIdx >= lines.length) {
@@ -98,12 +107,12 @@ const Utils = {
       element.appendChild(p);
 
       if (line === '' || line === '.') {
-        currentTimeout = setTimeout(nextLine, line === '.' ? 600 : 200);
+        setTimeout(nextLine, line === '.' ? 600 : 200);
         return;
       }
 
       Utils.typewrite(p, line, speed, () => {
-        currentTimeout = setTimeout(nextLine, lineDelay);
+        setTimeout(nextLine, lineDelay);
       });
     };
 
