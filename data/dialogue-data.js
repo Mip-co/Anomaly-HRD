@@ -9,7 +9,7 @@ const DIALOGUE_DATA = {
   // ── Boss Intro Email (dipilih random tiap run) ──
   bossEmailVariants: [
     [
-      'Selamat datang di Nusantara Jaya Mandiri.',
+      'Selamat datang di PT Dimbud Mencari Cinta Sejati tbk.',
       'Anda ditugaskan untuk shift malam ini.',
       'Target Anda: proses semua pelamar yang datang.',
       'Ikuti prosedur dengan ketat.',
