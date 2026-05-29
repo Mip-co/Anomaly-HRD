@@ -9,40 +9,89 @@ const Polish = (() => {
   // ══════════════════════════════════════════
   // PRELOADER
   // ══════════════════════════════════════════
-  const preload = () => {
+  const _gatherAssetUrls = () => {
+    const urls = new Set();
+
+    const collect = (value) => {
+      if (!value) return;
+      if (typeof value === 'string') {
+        urls.add(value);
+      } else if (Array.isArray(value)) {
+        value.forEach(collect);
+      } else if (typeof value === 'object') {
+        Object.values(value).forEach(collect);
+      }
+    };
+
+    collect(window.ASSETS || {});
+    collect([
+      'assets/backgrounds/office_clean.png',
+      'assets/backgrounds/office_uneasy.png',
+      'assets/backgrounds/office_corrupted.png',
+      'assets/backgrounds/office_horror.png',
+      'assets/custscene/phk_office.png',
+      'assets/custscene/kos_room.png',
+      'assets/custscene/job_posting.png',
+      'assets/custscene/night_bus.png',
+      'assets/custscene/company_building.png',
+      'assets/custscene/director_email.png',
+    ]);
+
+    return Array.from(urls).filter(Boolean);
+  };
+
+  const preload = async () => {
+    const bar = document.getElementById('loading-bar');
+    const text = document.getElementById('loading-text');
+    const overlay = document.getElementById('loading-overlay');
+
+    const assetUrls = _gatherAssetUrls();
+    const total = assetUrls.length || 1;
+
+    const updateProgress = (loaded, message) => {
+      const pct = Math.round((loaded / total) * 100);
+      if (bar) bar.style.width = pct + '%';
+      if (text) text.textContent = message || `Memuat asset: ${loaded}/${total}`;
+    };
+
+    let loaded = 0;
+    updateProgress(0, 'Memulai login HRD...');
+
+    const loadImage = (src) => new Promise((resolve) => {
+      const image = new Image();
+      const finish = () => {
+        loaded += 1;
+        updateProgress(loaded, `Memuat asset: ${loaded}/${total}`);
+        resolve();
+      };
+      image.onload = image.onerror = finish;
+      image.src = src;
+    });
+
+    const loadTasks = assetUrls.map(loadImage);
+    const introSteps = [
+      'Menghubungkan ke server HRD...',
+      'Memverifikasi operator...',
+      'Memuat database pelamar...',
+      'Menyiapkan shift malam...',
+    ];
+
+    let stepIndex = 0;
+    const stepTimer = setInterval(() => {
+      if (stepIndex < introSteps.length) {
+        updateProgress(loaded, introSteps[stepIndex]);
+        stepIndex += 1;
+      } else {
+        clearInterval(stepTimer);
+      }
+    }, 600);
+
+    await Promise.race([Promise.all(loadTasks), Utils.sleep(15000)]);
+    clearInterval(stepTimer);
+    updateProgress(total, 'Semua asset siap. Memulai shift...');
+
     return new Promise((resolve) => {
-      const bar     = document.getElementById('loading-bar');
-      const text    = document.getElementById('loading-text');
-      const overlay = document.getElementById('loading-overlay');
-
-      const steps = [
-        'Memuat sistem...',
-        'Menginisialisasi HRD v2.1...',
-        'Memeriksa daftar pelamar...',
-        'Mempersiapkan shift malam...',
-        'Siap.',
-      ];
-
-      // Animate loading bar through steps
-      let stepIdx = 0;
-      const stepInterval = setInterval(() => {
-        if (stepIdx < steps.length) {
-          const pct = Math.round(((stepIdx + 1) / steps.length) * 100);
-          if (bar)  bar.style.width = pct + '%';
-          if (text) text.textContent = steps[stepIdx];
-          stepIdx++;
-        } else {
-          clearInterval(stepInterval);
-          // Done — hide loader
-          _hideLoader(overlay, resolve);
-        }
-      }, 300);
-
-      // Hard fallback — never stuck longer than 2s
-      setTimeout(() => {
-        clearInterval(stepInterval);
-        _hideLoader(overlay, resolve);
-      }, 2000);
+      setTimeout(() => _hideLoader(overlay, resolve), 250);
     });
   };
 

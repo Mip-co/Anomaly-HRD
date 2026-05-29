@@ -139,7 +139,7 @@ const SECRET_APPLICANT_DIMBUD = {
     pengalaman: 'Saya pernah kerja sampai stroke. pagi, siang, malam semua masuk.',
     motivasi: 'Motivasi? Apa itu motivasi... mending jadi VTuber.',
     diri: 'Saya terbiasa multitasking. Ngurus talent, sponsor, drama, sampe jadi tempat curhat.',
-    gaji: 'Ekspektasi gaji? Yang penting dibayar, ga kayak yang sebelumnya. WOI BEMMY HENDRIAS BAYAR UTANG LU!!.',
+    gaji: 'Ekspektasi gaji? Yang penting dibayar, ga kayak yang sebelumnya. OI BEM BAYAR UTANG LU.',
   },
 };
 
