@@ -164,10 +164,10 @@ button {
 
 .title-btn {
   width: 100%;
-  max-width: 320px;
-  padding: 10px 28px;
+  max-width: 300px;
+  padding: 8px 24px;
   border-radius: 4px;
-  font-size: 22px;
+  font-size: 20px;
   text-transform: uppercase;
 }
 

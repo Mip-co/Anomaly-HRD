@@ -110,21 +110,19 @@ const DialogueSystem = (() => {
 
   // ── Show applicant greeting ──
   const showGreeting = (applicant, callback) => {
-    const box     = Utils.el('dialogue-box');
-    const speaker = Utils.el('dialogue-speaker');
-    const text    = Utils.el('dialogue-text');
-    const next    = Utils.el('dialogue-next');
+    const subtitle = Utils.el('applicant-subtitle');
+    const text     = Utils.el('dialogue-text');
+    const next     = Utils.el('dialogue-next');
 
-    if (!box) { if (callback) callback(); return; }
+    if (!subtitle || !text) { if (callback) callback(); return; }
 
     Utils.show('action-panel');
-    Utils.show(box);
-    Utils.hide('question-panel');
+    Utils.show(subtitle);
+    Utils.show('question-panel');
     Utils.hide('decision-panel');
     Utils.hide(next);
 
-    speaker.textContent = applicant.name;
-    text.textContent    = '';
+    text.textContent = '';
 
     const { cls, speed } = _getVoiceStyle(applicant);
     text.className = `dialogue-text ${cls}`;
@@ -132,24 +130,28 @@ const DialogueSystem = (() => {
     onDialogueComplete = callback;
 
     _typewrite(text, applicant.dialogues.greeting, speed, () => {
-      Utils.show(next);
+      if (onDialogueComplete) {
+        const cb = onDialogueComplete;
+        onDialogueComplete = null;
+        cb();
+      }
     });
   };
 
   // ── Show answer ──
   const showAnswer = (applicant, questionId, callback) => {
-    const speaker = Utils.el('dialogue-speaker');
-    const text    = Utils.el('dialogue-text');
-    const next    = Utils.el('dialogue-next');
+    const subtitle = Utils.el('applicant-subtitle');
+    const text     = Utils.el('dialogue-text');
+    const next     = Utils.el('dialogue-next');
 
-    if (!text) { if (callback) callback(); return; }
+    if (!subtitle || !text) { if (callback) callback(); return; }
 
-    Utils.hide('question-panel');
+    Utils.show(subtitle);
+    Utils.show('question-panel');
     Utils.hide(next);
 
     const answer = applicant.dialogues[questionId] || '...';
-    speaker.textContent = applicant.name;
-    text.textContent    = '';
+    text.textContent = '';
 
     const { cls, speed } = _getVoiceStyle(applicant);
     text.className = `dialogue-text ${cls}`;
@@ -164,6 +166,11 @@ const DialogueSystem = (() => {
 
     _typewrite(text, answer, speed, () => {
       Utils.show(next);
+      if (onDialogueComplete) {
+        const cb = onDialogueComplete;
+        onDialogueComplete = null;
+        cb();
+      }
     });
   };
 
@@ -204,8 +211,8 @@ const DialogueSystem = (() => {
     const next = Utils.el('dialogue-next');
     if (next) next.addEventListener('click', handleAdvance);
 
-    const box = Utils.el('dialogue-box');
-    if (box)  box.addEventListener('click', handleAdvance);
+    const subtitle = Utils.el('applicant-subtitle');
+    if (subtitle) subtitle.addEventListener('click', handleAdvance);
 
     // Space bar also advances
     document.addEventListener('keydown', (e) => {

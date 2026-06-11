@@ -70,21 +70,53 @@ const DIALOGUE_DATA = {
 
   // ── Horror Events Pool (Phase 3: expanded) ──
   horrorEvents: [
+    // Subtle / psychological events (emoji or text-only)
+    {
+      text: 'ANDA TIDAK SENDIRI',
+      image: '👁️',
+      duration: 1200,
+      sound: 'whisper',
+    },
+    {
+      text: 'PELAMAR BERIKUTNYA SUDAH DI DALAM',
+      image: '',
+      duration: 1400,
+      sound: 'static',
+    },
+    {
+      text: 'JANGAN LIHAT JENDELA',
+      image: '🚪',
+      duration: 1600,
+      sound: 'creak',
+    },
+    {
+      text: 'SHIFT INI SUDAH PERNAH TERJADI',
+      image: '',
+      duration: 1800,
+      sound: 'static',
+    },
+    {
+      text: '',
+      image: '📞',
+      duration: 1200,
+      sound: 'static',
+    },
+
     {
       text:     'LAMPU MATI SEJENAK',
-      image:    'assets\characters\jumpscares\Jumpscare6.png',
+      image:    'assets/characters/jumpscares/Jumpscare6.png',
       duration: 1400,
       sound:    'jumpscare',
     },
     {
       text:     'SESUATU BERGERAK DI LUAR JENDELA',
-      image:    'assets\characters\jumpscares\Jumpscare2.png',
+      image:    'assets/characters/jumpscares/Jumpscare2.png',
       duration: 2000,
       sound:    'creak',
-    },
+    },  
     {
       text:     'LAYAR BERUBAH SEBENTAR',
-      image:    'assets\characters\jumpscares\Jumpscare7.png',
+      image:    'assets/characters/jumpscares/Jumpscare2.png',
       duration: 1600,
       sound:    'jumpscare',
     },
@@ -108,7 +140,7 @@ const DIALOGUE_DATA = {
     },
     {
       text:     'DATA HILANG SEBENTAR',
-      image:    'assets\characters\jumpscares\Jumpscare1.png',
+      image:    'assets/characters/jumpscares/Jumpscare1.png',
       duration: 1200,
       sound:    'static',
     },

@@ -172,6 +172,15 @@ const ApplicantSystem = (() => {
 
     // Keep CV hidden until the player opens it with Tab
     AudioManager.play('paperRustle');
+
+    // Small chance to trigger a micro-horror when CV is first rendered
+    try {
+      if (window.Effects && Math.random() < 0.06) {
+        Effects.triggerMicroHorror('cv');
+        panel.classList.add('cv-micro-glitch');
+        setTimeout(() => panel.classList.remove('cv-micro-glitch'), Utils.randomInt(300, 600));
+      }
+    } catch (e) { /* non-fatal */ }
   };
 
   // ── CV_CHANGES: detect re-reads via click on cv-panel ──
@@ -192,6 +201,23 @@ const ApplicantSystem = (() => {
       }
     };
   };
+
+  // Attach a safe micro-horror click hook to CV panel (only once)
+  (function _bindCVMicroClick() {
+    const panel = Utils.el('cv-panel');
+    if (!panel) return;
+    if (panel.dataset.microHorrorBound === '1') return;
+    panel.addEventListener('click', () => {
+      try {
+        if (window.Effects && Math.random() < 0.07) {
+          Effects.triggerMicroHorror('cv');
+          panel.classList.add('cv-micro-glitch');
+          setTimeout(() => panel.classList.remove('cv-micro-glitch'), Utils.randomInt(300, 600));
+        }
+      } catch (e) { /* ignore */ }
+    });
+    panel.dataset.microHorrorBound = '1';
+  })();
 
   // ── Stamp CV ──
   const stampCV = (decision) => {

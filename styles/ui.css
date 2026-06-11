@@ -59,14 +59,18 @@
 #question-buttons {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  min-height: 140px;
 }
 
 .btn-question {
-  background: rgba(20, 30, 20, 0.8);
-  color: var(--col-monitor-text);
-  border: 1px solid var(--col-green-dim);
-  padding: 8px 12px;
+  display: block;
+  width: 100%;
+  min-height: 42px;
+  background: rgba(24, 36, 24, 0.95);
+  color: var(--col-white-dim);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  padding: 10px 14px;
   text-align: left;
   font-size: 12px;
   font-family: var(--font-mono);

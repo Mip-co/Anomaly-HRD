@@ -32,6 +32,9 @@ const Game = (() => {
     perfectRun:              true,   // stays true if no hearts lost
   };
 
+  // last time a non-penalty ambient horror event fired (ms)
+  let lastAmbientEventAt = 0;
+
   const getQueueSize = () => state.difficulty === 'hard' ? HARD_QUEUE_SIZE : NORMAL_QUEUE_SIZE;
   const getFinalOfficeEventAt = () => state.applicantQueue.length - 1;
 
@@ -256,7 +259,11 @@ const Game = (() => {
       !state.ended;
 
     if (shouldSpawnSecretDimbud) {
+      // Insert a deep-cloned secret applicant and ensure dialogues are isolated
       applicant = Utils.clone(SECRET_APPLICANT_DIMBUD);
+      // Defensive: ensure dialogues is a deep clone so later systems don't mutate the shared object
+      applicant.dialogues = Utils.clone(SECRET_APPLICANT_DIMBUD.dialogues || {});
+      applicant._isSecretDimbud = true;
       state.applicantQueue[state.currentIndex] = applicant;
       state.dimbudSpawned = true;
     }
@@ -278,6 +285,28 @@ const Game = (() => {
     // Load into scene
     ApplicantSystem.loadApplicant(applicant);
     Polish.animateCVIn();
+
+    // Random ambient horror events that are NOT penalties
+    try {
+      const now = Date.now();
+      const tension = window.Effects ? Effects.getTension() : 0;
+      // small cooldown to avoid repeats
+      if (now - lastAmbientEventAt > 8000) {
+        if (tension >= 1 && Math.random() < 0.12) {
+          if (window.Effects) Effects.triggerMicroHorror('ambient');
+          lastAmbientEventAt = now;
+        } else if (tension >= 2 && Math.random() < 0.08) {
+          // occasional slightly larger random horror (but not always penalty)
+          try {
+            const ev = window.AnomalySystem ? AnomalySystem.randomHorrorEvent() : null;
+            if (ev && window.Effects) {
+              Effects.triggerHorrorEvent(ev);
+              lastAmbientEventAt = now + 4000; // slightly longer pause
+            }
+          } catch (e) { /* ignore errors from optional systems */ }
+        }
+      }
+    } catch (e) { /* ignore */ }
 
     // Auto-save minimal state so Continue can resume
     try {
@@ -319,6 +348,7 @@ const Game = (() => {
 
     if (!panel || !buttons) return;
 
+    Utils.show('action-panel');
     Utils.hide(next);
     Utils.hide('decision-panel');
     buttons.innerHTML = '';
@@ -354,6 +384,12 @@ const Game = (() => {
           DialogueSystem.showAnswer(applicant, q.id, () => {
             Utils.show(panel);
             _checkShowDecision();
+            // Small chance for micro-horror after an answer (non-blocking)
+            try {
+              if (!state.ended && window.Effects && Math.random() < 0.06) {
+                Effects.triggerMicroHorror('question');
+              }
+            } catch (e) { /* ignore */ }
           });
         }, answerDelay);
       });

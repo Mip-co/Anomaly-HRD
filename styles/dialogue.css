@@ -5,12 +5,20 @@
 
 /* ── Action Panel wrapper (sits inside desk-surface) ── */
 #action-panel {
+  position: relative;
+  width: min(420px, 30%);
+  max-width: 360px;
+  min-width: 240px;
+  max-height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   gap: 6px;
-  width: 280px;
-  min-width: 240px;
-  height: 100%;
+  padding: 10px 14px;
+  background: linear-gradient(270deg, rgba(10, 8, 6, 0.98) 0%, rgba(10, 8, 6, 0.88) 45%, rgba(10, 8, 6, 0.72) 70%, transparent 100%);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.04), 0 0 24px rgba(0, 0, 0, 0.35);
+  z-index: 140;
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -113,20 +121,79 @@
   color: var(--col-amber);
 }
 
+#applicant-subtitle {
+  position: absolute;
+  bottom: 140px;
+  
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: min(100vw, px);
+  max-width: 95%;
+  pointer-events: none;
+  animation: subtitle-fade-in 0.22s ease both;
+  z-index: 1;
+  padding: 0 5px 0px;
+}
+
+#applicant-subtitle .dialogue-text {
+  display: block;
+  white-space: normal;
+  overflow: visible;
+  font-family: var(--font-mono);
+  font-size: clamp(14px, 1.7vw, 18px);
+  color: rgba(245, 236, 212, 0.96);
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  text-shadow:
+    0 0 3px rgba(0, 0, 0, 0.9),
+    0 0 10px rgba(0, 0, 0, 0.55),
+    0 0 20px rgba(255, 248, 240, 0.16);
+  min-height: unset;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+#applicant-subtitle .dialogue-next {
+  pointer-events: none;
+  align-self: center;
+  margin-top: 0;
+  color: rgba(236,196,80,0.92);
+}
+
+#applicant-subtitle .dialogue-next {
+  align-self: center;
+  margin-top: 0;
+  color: rgba(236,196,80,0.92);
+}
+
+@keyframes subtitle-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* ── Question Panel ── */
 #question-panel {
   flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;
-  gap: 4px;
+  gap: 8px;
+  background: rgba(8, 10, 8, 0.96);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 10px;
+  border-radius: 2px;
 }
 
 .panel-label {
   font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: 2.5px;
-  color: var(--col-gray);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.72);
   text-transform: uppercase;
   flex-shrink: 0;
 }
@@ -134,26 +201,47 @@
 #question-buttons {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
   overflow-y: auto;
   flex: 1;
-  min-height: 0;
+  min-height: 160px;
 }
 
-.btn-question {
+#question-buttons .btn-question,
+#question-buttons button {
+  display: block;
+  width: 100%;
+  min-height: 46px;
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  color: rgba(200,160,60,0.65);
-  background: rgba(200,160,48,0.03);
-  border: 1px solid #221c0c;
-  padding: 5px 9px;
+  font-size: 12px;
+  color: rgba(245, 240, 220, 0.96) !important;
+  background: rgba(40, 55, 40, 0.98) !important;
+  border: 1px solid rgba(200, 180, 140, 0.25) !important;
+  padding: 10px 14px;
   text-align: left;
   cursor: pointer;
   transition: all var(--trans-fast);
-  border-radius: 1px;
-  letter-spacing: 0.2px;
-  line-height: 1.45;
+  border-radius: 2px;
+  letter-spacing: 0.1px;
+  line-height: 1.35;
   flex-shrink: 0;
+}
+
+#question-buttons .btn-question:hover,
+#question-buttons button:hover {
+  background: rgba(70, 95, 65, 0.98) !important;
+  border-color: rgba(245, 232, 180, 0.45) !important;
+  color: #fff !important;
+  box-shadow: 0 0 10px rgba(180, 170, 100, 0.2);
+}
+
+#question-buttons .btn-question.used,
+#question-buttons button.used {
+  opacity: 0.45 !important;
+  border-color: rgba(100,100,100,0.25) !important;
+  background: rgba(10, 12, 10, 0.82) !important;
+  color: rgba(180, 170, 150, 0.55) !important;
+  pointer-events: none;
 }
 
 .btn-question:hover {

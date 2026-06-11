@@ -86,8 +86,8 @@ const ASSETS = {
   jumpscares: {
     face:   'assets/characters/jumpscares/Jumpscare1.png',
     shadow: 'assets/characters/jumpscares/Jumpscare2.png',
-    static: 'assets/characters/jumpscares/Jumpscare3.png',
-    eye:    'assets/characters/jumpscares/Jumpscare4.png',
+    static: 'assets/characters/jumpscares/Jumpscare6.png',
+    eye:    'assets/characters/jumpscares/Jumpscare6.png',
   },
 
 };

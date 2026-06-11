@@ -865,6 +865,11 @@
   pointer-events: none;
 }
 
+#applicant-figure {
+  position: relative;
+  width: max-content;
+}
+
 /* Applicant figure */
 .applicant-body {
   position: relative;

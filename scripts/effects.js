@@ -244,11 +244,15 @@ const Effects = (() => {
     clearInterval(tensionInterval);
     tensionInterval = setInterval(() => {
       if (tensionLevel < 1) return;
-      const roll = Math.random();
-      if (roll < 0.15 * tensionLevel) {
+      // Use independent rolls for shadow & glitch so both can occur
+      const rollShadow = Math.random();
+      const rollGlitch = Math.random();
+      if (rollShadow < 0.12 * tensionLevel) {
         _ambientShadow();
-      } else if (roll < 0.08 * tensionLevel) {
-        Effects.glitchScreen(200);
+      }
+      if (rollGlitch < 0.08 * tensionLevel) {
+        // small randomized glitch to avoid repetition
+        Effects.glitchScreen(Utils.randomInt(150, 250));
       }
     }, 8000);
   };
@@ -280,8 +284,8 @@ const Effects = (() => {
       if (!overlay) { resolve(); return; }
 
       AudioManager.play('jumpscare');
-      Utils.flashScreen('white', 80);
-      await Utils.sleep(80);
+      Utils.flashScreen('white', 120);
+      await Utils.sleep(120);
 
       // Map type to asset
       const assetMap = {
@@ -311,13 +315,15 @@ const Effects = (() => {
 
       overlay.classList.remove('hidden');
 
-      document.body.style.filter = 'hue-rotate(180deg) contrast(2)';
+      document.body.style.filter = 'hue-rotate(160deg) contrast(2.4) saturate(1.15)';
+      document.body.style.transform = 'scale(1.015)';
       setTimeout(() => {
-        document.body.style.filter = 'hue-rotate(90deg) contrast(1.5)';
-        setTimeout(() => { document.body.style.filter = ''; }, 100);
-      }, 100);
+        document.body.style.filter = 'hue-rotate(90deg) contrast(1.7) saturate(1)';
+        document.body.style.transform = '';
+        setTimeout(() => { document.body.style.filter = ''; }, 140);
+      }, 140);
 
-      await Utils.sleep(600 + tensionLevel * 80);
+      await Utils.sleep(720 + tensionLevel * 90);
 
       overlay.classList.add('hidden');
       img.innerHTML   = '';
@@ -346,8 +352,11 @@ const Effects = (() => {
       }
 
       img.innerHTML = '';
-      const isImagePath = typeof event.image === 'string' && /\.(png|jpe?g|gif|svg)(\?.*)?$/i.test(event.image.trim());
-      if (isImagePath) {
+      const isImagePath = typeof event.image === 'string' && /\.(png|jpe?g|gif|svg)(\?.*)?$/i.test((event.image || '').trim());
+      // If event.image is intentionally an empty string, leave image area blank
+      if (event.image === '') {
+        img.textContent = '';
+      } else if (isImagePath) {
         const art = document.createElement('img');
         art.src = event.image;
         art.className = 'horror-image-img';
@@ -406,6 +415,26 @@ const Effects = (() => {
       vhs.style.opacity   = savedOp;
       vhs.style.transform = '';
     }, 150);
+  };
+
+  // ── Micro-horror: subtle, short effects for reading CVs / questions ──
+  const triggerMicroHorror = (type = 'generic') => {
+    // lightweight, non-blocking effects
+    if (!document.body) return;
+    const t = type || 'generic';
+    // small chance guards should be handled by callers; still keep internal randomness
+    const pick = Math.random();
+    if (pick < 0.25) {
+      triggerVHSError();
+    } else if (pick < 0.6) {
+      glitchScreen(Utils.randomInt(100, 180));
+    } else {
+      // gentle flicker + whisper/static if available
+      if (Math.random() < 0.5) triggerFlicker(1);
+      if (window.AudioManager) AudioManager.play(Math.random() < 0.5 ? 'whisper' : 'static');
+    }
+    // very brief flash for slight emphasis (not a jumpscare)
+    if (Math.random() < 0.12) Utils.flashScreen('white', 60);
   };
 
   // ── Clock update ──
@@ -700,6 +729,7 @@ const Effects = (() => {
     triggerHorrorEvent,
     triggerJumpscare,
     triggerVHSError,
+    triggerMicroHorror,
     triggerBadEndingSequence,
     triggerFinalOfficeEvent,
     triggerGoodEndingSequence,

@@ -14,6 +14,7 @@ const RoomSystem = (() => {
   let currentState = 'clean';
   let escapeCallback = null;
   let escapeUnlocked = false;
+  let _lastDoorInteraction = 0;
 
   // ── Element references (lazy) ──
   const _el = (id) => document.getElementById(id);
@@ -87,10 +88,32 @@ const RoomSystem = (() => {
     if (!door) return;
 
     door.addEventListener('click', () => {
+      const now = Date.now();
+      if (now - _lastDoorInteraction < 1100) return; // debounce spam
+      _lastDoorInteraction = now;
+
       if (!escapeUnlocked) {
-        // Door is "locked" — play rattle and shake
-        AudioManager.play('doorRattle');
-        _shakeDoor();
+        // Randomized locked-door responses for scarier feel
+        const r = Math.random();
+        if (r < 0.33) {
+          AudioManager.play('doorRattle');
+          _shakeDoor();
+        } else if (r < 0.6) {
+          AudioManager.play('knock');
+          if (window.Effects) Effects.triggerFlicker(1);
+        } else if (r < 0.85) {
+          AudioManager.play('static');
+          if (window.Effects) Effects.glitchScreen(150);
+        } else {
+          // show a short system hint if DialogueSystem exists
+          if (window.DialogueSystem && DialogueSystem.showSystemMessage) {
+            const hints = ['Pintu tidak bergerak.', 'Ada yang menahan dari sisi lain.', 'Jangan keluar sekarang.'];
+            DialogueSystem.showSystemMessage(hints[Utils.randomInt(0, hints.length - 1)], 'sys');
+          } else {
+            AudioManager.play('doorRattle');
+            _shakeDoor();
+          }
+        }
         return;
       }
       // Escape!
